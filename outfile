@@ -1,0 +1,26 @@
+warning: unused import: `post`
+ --> src/main.rs:1:22
+  |
+1 | use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result}; // webapp framework
+  |                      ^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: struct `AppState` is never constructed
+  --> src/main.rs:27:8
+   |
+27 | struct AppState {
+   |        ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `seeemsgood_guild` (bin "seeemsgood_guild") generated 2 warnings (run `cargo fix --bin "seeemsgood_guild"` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s
+     Running `target/debug/seeemsgood_guild`
+[2024-07-21T05:54:16Z INFO  actix_server::builder] starting 12 workers
+[2024-07-21T05:54:16Z INFO  actix_server::server] Actix runtime found; starting in Actix runtime
+[2024-07-21T05:54:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET / HTTP/1.1" 200 1025 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0" 0.020989
+[2024-07-21T05:54:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /favicon.ico HTTP/1.1" 404 0 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0" 0.000100
+[2024-07-21T05:54:46Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /form HTTP/1.1" 200 577 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0" 0.000162
+[2024-07-21T05:54:56Z INFO  actix_web::middleware::logger] 127.0.0.1 "POST /postup HTTP/1.1" 200 5 "http://localhost:8080/form" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0" 0.001478
+[2024-07-21T05:55:12Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET / HTTP/1.1" 200 1025 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0" 0.000194
