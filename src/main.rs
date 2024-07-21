@@ -4,6 +4,7 @@ use env_logger::Env; // logging
 use tera::Tera; // html templating engine
 use lazy_static::lazy_static; //ensure templates only initialized once.
 use serde::{Serialize, Deserialize}; // json parsing
+use std::io::Write; // write to stdout
 
 // lazy_static is used to ensure that the templates are only initialized once.
 lazy_static! {
@@ -41,9 +42,11 @@ async fn guild_application() -> impl Responder {
 }
 
 async fn postup(params: web::Form<FormInput>) -> Result<HttpResponse> {
+    std::io::stdout().write_all(format!("name {:?}", params.name).as_bytes()).unwrap();
     Ok(HttpResponse::Ok()
-        .content_type("text/plain")
-        .body(format!("Your name is {}", params.name)))
+        // .content_type("text/plain")
+        //.body(format!("Your name is {}", params.name))
+        .body(params.name.clone()))
 }
 
 #[get("/")]
@@ -72,14 +75,3 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
-
-
-
-
-
-
-
-
-
-
-
