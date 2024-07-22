@@ -3,7 +3,7 @@ use actix_web::middleware::Logger; // logging middleware (requests)
 use env_logger::Env; // logging
 use tera::Tera; // html templating engine
 use lazy_static::lazy_static; //ensure templates only initialized once.
-use serde::{Serialize, Deserialize}; // json parsing
+use serde::{Serialize, Deserialize}; // json Parsing
 
 // lazy_static is used to ensure that the templates are only initialized once.
 lazy_static! {
@@ -27,13 +27,14 @@ pub struct FormInput {
     realm: String,
 }
 
-
+#[get("/form")]
 async fn guild_application() -> impl Responder {
     let context = tera::Context::new();
     let page_content = TEMPLATES.render("form.html", &context).unwrap();
     HttpResponse::Ok().body(page_content)
 }
 
+#[post("/postup")]
 async fn postup(params: web::Form<FormInput>) -> Result<HttpResponse> {
     println!("\n[POST-DATA] - Name:{:?} Realm:{:?}\n", params.name, params.realm);
     Ok(HttpResponse::Ok()
@@ -62,8 +63,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(Logger::default())
             .service(index)
-            .service(web::resource("/form").route(web::get().to(guild_application)))
-            .service(web::resource("/postup").route(web::post().to(postup)))
+            .service(guild_application)
+            .service(postup)
 
     )
     .bind((ServerAddress, ServerPort))?
