@@ -21,13 +21,6 @@ lazy_static! {
  }
 
 
-
-// form scope
-struct AppState {
-    state: String,
-}
-
-
 #[derive(Serialize, Deserialize)]
 pub struct FormInput {
     name: String,
@@ -60,8 +53,11 @@ async fn index() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> { 
-    let _server_logs = env_logger::init_from_env(Env::default().default_filter_or("info"));
-
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    
+    let ServerAddress: &str = "127.0.0.1";
+    let ServerPort: u16 = 8080;
+    println!("Server Running on http://{}:{}", ServerAddress, ServerPort);
     HttpServer::new(||  
         App::new()
             .wrap(Logger::default())
@@ -70,7 +66,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/postup").route(web::post().to(postup)))
 
     )
-    .bind(("127.0.0.1", 8080))?
+    .bind((ServerAddress, ServerPort))?
     .run()
     .await
 }
