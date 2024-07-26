@@ -23,6 +23,7 @@ lazy_static! {
 
 #[derive(Serialize, Deserialize)]
 pub struct FormInput {
+    id: i32,
     name: String,
     realm: String,
 }
@@ -36,7 +37,7 @@ async fn guild_application() -> impl Responder {
 
 #[post("/postup")]
 async fn postup(params: web::Form<FormInput>) -> Result<HttpResponse> {
-    println!("\n[POST-DATA] - Name:{:?} Realm:{:?}\n", params.name, params.realm);
+    println!("\n[POST-DATA] - Id:{:?} Name:{:?} Realm:{:?}\n",params.id, params.name, params.realm);
     Ok(HttpResponse::Ok()
         .content_type("text/plain")
         .body("You've submitted the form!"))
@@ -56,9 +57,9 @@ async fn index() -> impl Responder {
 async fn main() -> std::io::Result<()> { 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     
-    let ServerAddress: &str = "127.0.0.1";
-    let ServerPort: u16 = 8080;
-    println!("Server Running on http://{}:{}", ServerAddress, ServerPort);
+    let server_address: &str = "127.0.0.1";
+    let server_port: u16 = 8080;
+    println!("Server Running on http://{}:{}", server_address, server_port);
     HttpServer::new(||  
         App::new()
             .wrap(Logger::default())
@@ -67,7 +68,7 @@ async fn main() -> std::io::Result<()> {
             .service(postup)
 
     )
-    .bind((ServerAddress, ServerPort))?
+    .bind((server_address, server_port))?
     .run()
     .await
 }

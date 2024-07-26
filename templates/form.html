@@ -1,8 +1,10 @@
 {%extends 'layout.html'%}
 {%block content%}
+
     <body>
         <h3>Will hit handle_post_1</h3>
-        <form action=/postup method=POST>
+        <form name="guild-application" action=/postup method=POST> 
+          <input type="hidden" name="id" value="1">
             <label>
                 Name:
                 <input name="name">
