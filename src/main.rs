@@ -59,7 +59,7 @@ async fn postup(params: web::Form<FormInput>) -> Result<HttpResponse> {
     println!("[Application] - ID:{:?}, Name:{:?}, Realm:{:?}\n", user.id, user.name, user.realm);
     Ok(HttpResponse::Ok()
         .content_type("text/plain")
-        .body("You've submitted the form!"))
+        .body(format!("Thanks {}! your application has been processed. a guild member will get back to you soon.", user.name)))
 }
 
 #[get("/")]
