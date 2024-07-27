@@ -2,17 +2,24 @@
 {%block content%}
 
     <body>
-        <h3>Will hit handle_post_1</h3>
-        <form name="guild-application" id="guild-app" action=/postup method=POST> 
-            <label>
+        <h3 class="title">Guild Application</h3>
+        <form class="box" name="guild-application" action=/postup method=POST> 
+          <div class="field">  
+          <label>
                 Name:
-                <input name="name">
+                <input name="name" class="input is-rounded" type="text" placeholder="Main Character's Name">
             </label>
+          </div>
+          <div class="field">
             <label>
                 Realm:
-                <input name="realm">
+                <input name="realm" class="input is-rounded" type="text" placeholder="Main Character's Realm">
             </label>
-            <button type=submit>Submit form</button>
+          </div>
+          <div class="buttons are-normal">
+            <button class="button is-primary is-rounded" type=submit>Submit</button>
+            <button class="button is-danger is-rounded" type=reset>Reset</button>
+          </div>
         </form>
         <hr>
    </body>

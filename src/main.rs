@@ -75,7 +75,6 @@ async fn index() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> { 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    
     let server_address: &str = "127.0.0.1";
     let server_port: u16 = 8080;
     println!("Server Running on http://{}:{}", server_address, server_port);
