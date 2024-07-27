@@ -1,19 +1,24 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title> Seems Good</title>
-    <link rel="stylesheet" href="https://unpkg.com/missing.css@1.1.2">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.css">
   </head>
 
     <body>
       <main> 
-        <header>
-          <h1>Seems Good</h1>
-        </header>
+        <section class"section">
+          <div class="container has-text-centered">
 
-
+            <h1 class="title">
+              Seems Good
+            </h1>
         {% block content %}{% endblock %}
-
+          </div>
+        </section>
       </main>
     </body>
 </html>
