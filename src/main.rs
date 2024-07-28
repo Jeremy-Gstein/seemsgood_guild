@@ -70,14 +70,15 @@ async fn index() -> impl Responder {
 }
 
 
-
+const SERVER_ADDRESS: &str = "127.0.0.1";
+const SERVER_PORT: u16 = 8080;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> { 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    let server_address: &str = "127.0.0.1";
-    let server_port: u16 = 8080;
-    println!("Server Running on http://{}:{}", server_address, server_port);
+    // let server_address: &str = "127.0.0.1";
+    // let server_port: u16 = 8080;
+    println!("Server Running on http://{}:{}", SERVER_ADDRESS, SERVER_PORT);
     HttpServer::new(||  
         App::new()
             .wrap(Logger::default())
@@ -86,7 +87,19 @@ async fn main() -> std::io::Result<()> {
             .service(postup)
 
     )
-    .bind((server_address, server_port))?
+    .bind((SERVER_ADDRESS, SERVER_PORT))?
     .run()
     .await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_default_ip() {
+        // ensure only pushing to main branch with correct ip.
+        assert_eq!(SERVER_ADDRESS, "127.0.0.1");
+        assert_eq!(SERVER_PORT, 8080);
+    }
 }
