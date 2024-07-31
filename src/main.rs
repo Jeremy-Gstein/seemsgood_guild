@@ -76,7 +76,7 @@ async fn index() -> impl Responder {
 }
 
 
-const SERVER_ADDRESS: &str = "0.0.0.0";
+const SERVER_ADDRESS: &str = "127.0.0.1";
 const SERVER_PORT: u16 = 8080;
 
 #[actix_web::main]
