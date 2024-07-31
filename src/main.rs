@@ -61,6 +61,13 @@ async fn postup(params: web::Form<FormInput>) -> Result<HttpResponse> {
         .body(format!("Thanks {}! your application has been processed. a guild member will get back to you soon.", user.name)))
 }
 
+#[get("/application")]
+async fn apply() -> impl Responder {
+    let context = tera::Context::new();
+    let page_content = TEMPLATES.render("apply.html", &context).unwrap();
+    HttpResponse::Ok().body(page_content)
+}
+
 #[get("/")]
 async fn index() -> impl Responder {
     let context = tera::Context::new();
@@ -69,7 +76,7 @@ async fn index() -> impl Responder {
 }
 
 
-const SERVER_ADDRESS: &str = "127.0.0.1";
+const SERVER_ADDRESS: &str = "0.0.0.0";
 const SERVER_PORT: u16 = 8080;
 
 #[actix_web::main]
@@ -84,6 +91,7 @@ async fn main() -> std::io::Result<()> {
             .service(index)
             .service(guild_application)
             .service(postup)
+            .service(apply)
 
     )
     .bind((SERVER_ADDRESS, SERVER_PORT))?
