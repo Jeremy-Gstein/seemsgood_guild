@@ -8,7 +8,7 @@ use uuid::Uuid;                                    // uuid
 // lazy_static is used to ensure that the templates are only initialized once.
 lazy_static! {
     pub static ref TEMPLATES: Tera = {
-        let tera = match Tera::new("templates/**/*") {
+        let tera = match Tera::new("templates/*.html") {
             Ok(t) => t,
             Err(e) => {
                 println!("Parsing Error(s): {}", e);
