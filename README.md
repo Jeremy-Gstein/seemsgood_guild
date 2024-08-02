@@ -10,7 +10,10 @@
   `npm install -g npx`
 - clone the repo:
   `git clone https://github.com/Jeremy-Gstein/seemsgood_guild.git`
-- 
+- setup local server:
+    `npx wrangler dev`
+- deploy local to cloudflare cdn:
+  `npx wrangler deploy`
 
 ### TODO:
 - add templating to avoid repetitive html
