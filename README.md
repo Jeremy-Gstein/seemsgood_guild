@@ -16,8 +16,8 @@
   `npx wrangler deploy`
 
 ### TODO:
-- add templating to avoid repetitive html
-- tera was not supported
+- ~~add templating to avoid repetitive html~~
+- Start styling the website and adding relevent information.
 
 ### List of Resources:
 - [Render HTML file with Axum](https://github.com/programatik29/axum-tutorial)
