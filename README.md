@@ -22,3 +22,7 @@
 ### List of Resources:
 - [Render HTML file with Axum](https://github.com/programatik29/axum-tutorial)
 - [Cloudflare Worker Docs](https://developers.cloudflare.com/workers/)
+
+## Templating:
+- Using askama_axum (askama) as templating engine
+- Todo: { Add example docs }
