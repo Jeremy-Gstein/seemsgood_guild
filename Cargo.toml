@@ -1,17 +1,4 @@
 [package]
-<<<<<<< HEAD
-name = "seeemsgood_guild"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-actix-web = "4"
-tera = "1.19.1"
-lazy_static = "1.4.0"
-env_logger = "0.11.3"
-serde = { version = "1.0.204", features = ["derive"] }
-uuid = { version =  "1.10.0", features = ["v4", "serde"] }
-=======
 name = "dev-seemsgood-guild"
 version = "0.1.0"
 edition = "2021"
@@ -36,4 +23,3 @@ console_error_panic_hook = { version = "0.1.1" }
 include_dir = "0.7.4"
 askama_axum = "0.4.0"
 askama = "0.12.1"
->>>>>>> origin/devel

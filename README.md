@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 # Seems Good Webpage Repository
-
-[![Rust CI](https://github.com/Jeremy-Gstein/seemsgood_guild/actions/workflows/ci.yml/badge.svg)](https://github.com/Jeremy-Gstein/seemsgood_guild/actions/workflows/ci.yml)
-=======
-# Development Branch
-- switching to Cloudflare as serverless host provider.
-- did not support actix_web - changing to Axum
 
 ## Prereqs/Dependencies:
 - install wasm target system
@@ -31,4 +24,3 @@
 ## Templating:
 - Using askama_axum (askama) as templating engine
 - Todo: { Add example docs }
->>>>>>> origin/devel

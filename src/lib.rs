@@ -8,9 +8,6 @@ use askama_axum::Template;
 static _TEMPLATES_DIR: Dir = include_dir!("templates");
 
 
-
-
-
 fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
@@ -32,9 +29,6 @@ async fn fetch(
 struct IndexTemplate;
 
 async fn homepage() -> Html<String> {
-    // `std::include_str` macro can be used to include an utf-8 file as `&'static str` in compile
-    // time. This method is relative to current `main.rs` file.
-//    let _ = TEMPLATES_DIR;
     let template = IndexTemplate;
     let rendered = template.render().unwrap();
     
@@ -49,8 +43,6 @@ struct ApplyTemplate;
 
 
 async fn applypage() -> Html<String> {
-    // `std::include_str` macro can be used to include an utf-8 file as `&'static str` in compile
-    // time. This method is relative to current `main.rs` file.
     let template = ApplyTemplate;
     let rendered = template.render().unwrap();
     Html(rendered)
