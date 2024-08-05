@@ -7,7 +7,6 @@ use askama_axum::Template;
 
 static _TEMPLATES_DIR: Dir = include_dir!("templates");
 
-
 fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
