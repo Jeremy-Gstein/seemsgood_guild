@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 /target
+=======
+target
+node_modules
+.wrangler
+>>>>>>> origin/devel
