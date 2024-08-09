@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="theme-dark">
+<html lang="en">
   
   <head>
     <meta charset="utf-8">
@@ -89,9 +89,13 @@
             if (savedTheme) {
                 htmlElement.classList.add(savedTheme);
             } else {
-                htmlElement.classList.add('theme-dark'); // Default theme
+              // check OS theme, match or overide if toggled manually
+              if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  htmlElement.classList.add('theme-dark');
+                } else {
+                  htmlElement.classList.add('theme-light');
+                }
             }
-
             themeToggleButton.addEventListener('click', () => {
                 if (htmlElement.classList.contains('theme-dark')) {
                     htmlElement.classList.remove('theme-dark');
@@ -115,7 +119,7 @@
   <footer class="footer">
     <div class="content has-text-centered is-small">
       <p>
-        <strong>Seems Good</strong> The source code for this website can be viewed via this <a href="https://github.com/Jeremy-Gstein/seemsgood_guild"> Github Repository </a>.
+        <strong>Seems Good</strong> The source code for this website can be viewed via this <a href="https://github.com/Jeremy-Gstein/seemsgood_guild"> Github Repository. </a>
       </p>
     </div>
   </footer>
