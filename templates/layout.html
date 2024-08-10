@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="has-navbar-fixed-top">
   
   <head>
     <meta charset="utf-8">
@@ -32,9 +32,8 @@
     <body>
       <main> 
         <section class="section pt-0 px-0">
-       <!-- start of navbar -->
-          <div class="block">
-          <nav class="navbar is-spaced has-shadow is-dark" role="navigation" aria-label="main navigation">
+<!-- start of navbar -->
+          <nav class="navbar is-spaced has-shadow is-dark is-fixed-top" role="navigation" aria-label="main navigation">
             <div class="navbar-menu is-active">
               <div class="navbar-brand">
                   <figure class="image is-64x64 is-justify-content-center">
@@ -78,7 +77,8 @@
                   </div>
             </div>
           </nav>
-          <!--Javascript to change theme on button press -->
+      </section>
+<!--Javascript to change theme on button press -->
           <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -109,14 +109,20 @@
             });
         });
           </script>
-          </div>
-          <!--Start of index.html Content -->        
+        <section class="section">
+<!--Start of Page Content -->        
             {% block content %}{% endblock %}
         </section>
       </main>
     </body>
-    <!--Start of Footer -->
+<!--Start of Footer -->
   <footer class="footer">
+    <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/">Home</a></li>
+       <li><a href="/application">Application</a></li>
+      </ul>
+    </nav>
     <div class="content has-text-centered is-small">
       <p>
         <strong>Seems Good</strong> The source code for this website can be viewed via this <a href="https://github.com/Jeremy-Gstein/seemsgood_guild"> Github Repository. </a>
