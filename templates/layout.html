@@ -33,14 +33,21 @@
       <main> 
         <section class="section pt-0 px-0">
 <!-- start of navbar -->
-          <nav class="navbar has-shadow is-expanded is-dark is-fixed-top" role="navigation" aria-label="main navigation">
-            <div class="navbar-menu is-active">
+          <nav class="navbar is-spaced has-shadow is-dark is-fixed-top" role="navigation" aria-label="main navigation">
               <div class="navbar-brand">
                   <figure class="image is-64x64 is-justify-content-center">
                     <img  src="https://raw.githubusercontent.com/Jeremy-Gstein/seemsgood_guild/main/templates/media/guild-logo-removebg.png"/>
                   </figure>
-              </div>
+              
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarData">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
 
+            </div>
+          <div id="navbarData" class="navbar-menu">
               <div class="navbar-start">
                 <div class="navbar-item">
                   <div class="buttons">
@@ -51,8 +58,7 @@
                   </div>
                 </div>
               </div>
-                  <div class="navbar-end"> 
-              <div class="navbar-menu">
+            <div class="navbar-end"> 
                     <div class="navbar-item">
                       <div class="buttons">
                         <a class="button is-primary" href="https://discord.com">
@@ -76,7 +82,6 @@
                       </div>
                     </div>
                   </div>
-            </div>
             </div>
           </nav>
       </section>
@@ -111,6 +116,31 @@
             });
         });
           </script>
+<!--Javascript from bulma css docs Source: https://bulma.io/documentation/components/navbar/#navbarJsExample-->
+          <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+          // Get all "navbar-burger" elements
+          const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+
+             });
+          });
+
+        });
+          </script>
+      
         <section class="section">
 <!--Start of Page Content -->        
             {% block content %}{% endblock %}
