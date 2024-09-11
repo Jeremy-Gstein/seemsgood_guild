@@ -54,4 +54,3 @@ async fn damagesimspage() -> Html<String> {
     let rendered = template.render().unwrap();
     Html(rendered)
 }
-
