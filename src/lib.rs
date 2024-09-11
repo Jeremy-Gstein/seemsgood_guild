@@ -11,6 +11,7 @@ fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
         .route("/application", get(applypage))
+        .route("/damagesims", get(damagesimspage))
 }
 
 #[event(fetch)]
@@ -38,11 +39,19 @@ async fn homepage() -> Html<String> {
 #[template(path = "apply.html")]
 struct ApplyTemplate;
 
-
-
-
 async fn applypage() -> Html<String> {
     let template = ApplyTemplate;
     let rendered = template.render().unwrap();
     Html(rendered)
 }
+
+#[derive(Template)]
+#[template(path = "dps-sims.html")]
+struct DamageSimsTemplate;
+
+async fn damagesimspage() -> Html<String> {
+    let template = DamageSimsTemplate; 
+    let rendered = template.render().unwrap();
+    Html(rendered)
+}
+
