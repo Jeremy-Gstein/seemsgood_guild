@@ -206,20 +206,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dev-seemsgood-guild"
-version = "0.1.0"
-dependencies = [
- "askama",
- "askama_axum",
- "axum",
- "console_error_panic_hook",
- "include_dir",
- "tower-service",
- "worker",
- "worker-macros",
-]
-
-[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -528,6 +514,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "prod-seemsgood-web"
+version = "0.1.0"
+dependencies = [
+ "askama",
+ "askama_axum",
+ "axum",
+ "console_error_panic_hook",
+ "include_dir",
+ "tower-service",
+ "worker",
+ "worker-macros",
 ]
 
 [[package]]
