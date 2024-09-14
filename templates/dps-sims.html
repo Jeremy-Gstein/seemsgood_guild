@@ -1,14 +1,99 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="container is-center">
-  <iframe src="https://r2.seemsgood.org/roster/nuzzsin.html" 
-        width="100%" height="1000" 
-        frameborder="0" marginheight="0"
-        marginwidth="0">
-        Loading…
-    </iframe>
+
+<script>
+  function openModal(url) {
+    document.getElementById('modalIframe').src = url;
+    document.getElementById('skellModal').classList.add('is-active');
+  }
+
+  // Close the modal when clicking outside
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal-background')) {
+      document.getElementById('skellModal').classList.remove('is-active');
+    }
+  });
+
+  // Close the modal when clicking the close button
+  document.querySelectorAll('.modal-close').forEach(function(closeButton) {
+    closeButton.addEventListener('click', function() {
+      document.getElementById('skellModal').classList.remove('is-active');
+    });
+  });
+</script>
+
+
+
+<!-- Nuzzler -->
+<div class="grid">
+  <div class="cell">
+    <div class="box">
+      <div class="card" style="background-color: rgb(255, 244, 104);">
+        <div class="card-content">
+          <div class="content">
+            <p class="title has-text-centered has-text-black">
+            Nuzzsin
+            </p>
+          </div>
+        </div>
+        <footer class="card-footer has-background-success">
+          <button class="card-footer-item has-text-link" onclick="openModal('https://r2.seemsgood.org/roster/nuzzsin.html')">View Sim</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Infi -->
+  <div class="cell">
+    <div class="box">
+      <div class="card" style="background-color: rgb(63, 199, 235);">
+        <div class="card-content">
+          <div class="content">
+            <p class="title has-text-centered has-text-black">
+            Infi 
+            </p>
+          </div>
+        </div>
+        <footer class="card-footer has-background-success">
+          <button class="card-footer-item has-text-link" onclick="openModal('https://r2.seemsgood.org/roster/infilicious.html')">View Sim</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shodo -->
+  <div class="cell">
+    <div class="box">
+      <div class="card" style="background-color: rgb(51, 147, 127);">
+        <div class="card-content">
+          <div class="content">
+            <p class="title has-text-centered has-text-black">
+            Shodo 
+            </p>
+          </div>
+        </div>
+        <footer class="card-footer has-background-success">
+          <button class="card-footer-item has-text-link" onclick="openModal('https://r2.seemsgood.org/roster/notshodo.html')">View Sim</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- end grid -->
 </div>
 
-{% endblock %}
+<!-- Modal Skell for displaying sims -->
+<div id="skellModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-content" style="width: 80%; margin: 2rem auto;">
+    <iframe id="modalIframe" width="100%" height="1000"></iframe>
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
+</div>
 
+
+{% endblock %}
