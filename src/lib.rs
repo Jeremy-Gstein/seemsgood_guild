@@ -10,7 +10,7 @@ static _TEMPLATES_DIR: Dir = include_dir!("templates");
 fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
-        //.route("/application", get(applypage))
+        .route("/application", get(applypage))
         .route("/damagesims", get(damagesimspage))
 }
 

@@ -1,4 +1,4 @@
-name = "dev-seemsgood-guild"
+name = "prod-seemsgood"
 main = "build/worker/shim.mjs"
 compatibility_date = "2024-08-02"
 
