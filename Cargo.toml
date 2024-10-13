@@ -5,11 +5,16 @@ edition = "2021"
 authors = [ "jg <j51b5@pm.me>" ]
 
 [package.metadata.release]
-release = false
+release = true
 
 # https://github.com/rustwasm/wasm-pack/issues/1247
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = false
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
 
 [lib]
 crate-type = ["cdylib"]
