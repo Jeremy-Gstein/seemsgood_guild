@@ -1,5 +1,5 @@
 # Seems Good Webpage Repository
-
+[![rust-clippy analyze](https://github.com/Jeremy-Gstein/seemsgood_guild/actions/workflows/rust-clippy.yml/badge.svg?branch=main)](https://github.com/Jeremy-Gstein/seemsgood_guild/actions/workflows/rust-clippy.yml)
 ## Prereqs/Dependencies:
 - install wasm target system
   `rustup install wasm32-unknown-unknown`
