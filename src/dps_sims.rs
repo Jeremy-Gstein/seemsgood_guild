@@ -115,7 +115,7 @@ pub async fn damagesimspage() -> Html<String> {
         Player {
             name: "James",
             class: PlayerClass::Warrior,
-            sim_url: "https://r2.seemsgood.org/roster/jaemsy.html",
+            sim_url: "https://r2.seemsgood.org/roster/Jaemsy.html",
         },
         Player {
             name: "Ppd",
@@ -130,7 +130,7 @@ pub async fn damagesimspage() -> Html<String> {
         Player {
             name: "Ladora",
             class: PlayerClass::Evoker,
-            sim_url: "https://r2.seemsgood.org/roster/Ppdx.html",
+            sim_url: "https://r2.seemsgood.org/roster/Spyrodora.html",
         },
         Player {
             name: "Kael",
