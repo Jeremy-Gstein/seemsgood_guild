@@ -15,7 +15,7 @@ fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
         .route("/application", get(applypage))
-        .route("/damagesims", get(dps_sims::damagesimspage))
+        .route("/dps-sims", get(dps_sims::damagesimspage))
 }
 
 #[event(fetch)]
