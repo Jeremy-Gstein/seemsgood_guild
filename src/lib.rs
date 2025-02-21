@@ -14,6 +14,7 @@ static _TEMPLATES_DIR: Dir = include_dir!("templates");
 fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
+        .route("/about", get(aboutpage))
         .route("/application", get(applypage))
         .route("/dps-sims", get(dps_sims::damagesimspage))
 }
@@ -30,10 +31,13 @@ async fn fetch(
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate;
+struct IndexTemplate {
+    show_noti: bool,
+}
+
 
 async fn homepage() -> Html<String> {
-    let template = IndexTemplate;
+    let template = IndexTemplate { show_noti: true };
     let rendered = template.render().unwrap();
     
     Html(rendered)
@@ -41,10 +45,24 @@ async fn homepage() -> Html<String> {
 
 #[derive(Template)]
 #[template(path = "apply.html")]
-struct ApplyTemplate;
+struct ApplyTemplate {
+    show_noti: bool,
+}
 
 async fn applypage() -> Html<String> {
-    let template = ApplyTemplate;
+    let template = ApplyTemplate { show_noti: false };
+    let rendered = template.render().unwrap();
+    Html(rendered)
+}
+
+#[derive(Template)]
+#[template(path = "about.html")]
+struct AboutTemplate {
+    show_noti: bool,
+}
+
+async fn aboutpage() -> Html<String> {
+    let template = AboutTemplate { show_noti: true };
     let rendered = template.render().unwrap();
     Html(rendered)
 }

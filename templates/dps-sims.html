@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-
 <script>
   function openModal(url) {
     document.getElementById('modalIframe').src = url;
@@ -31,7 +30,7 @@
             </p>
           </div>
         </div>
-        <footer class="card-footer has-background-success-light">
+        <footer class="card-footer has-background-info">
           <button class="card-footer-item has-text-link" onclick="openModal('{{ player.sim_url }}')">View Sim</button>
         </footer>
       </div>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="has-navbar-fixed-top">
+<html lang="en">
 
   <head>
     <meta charset="utf-8">
@@ -33,7 +33,7 @@
     <main> 
       <section class="section pt-0 px-0">
         <!-- start of navbar -->
-        <nav class="navbar is-spaced has-shadow is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-spaced has-shadow is-dark" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
             <figure class="image is-64x64 is-justify-content-center">
               <img  src="https://r2.seemsgood.org/content/media/guild-logo-removebg.png"/>
@@ -53,7 +53,9 @@
                 <div class="buttons">
                   <a class="button is-primary" href="/"><strong>Home</strong></button>
                   </a>
-                  <a class="button is-primary" href="/application"><strong>Application</strong></button>
+		  <a class="button is-primary" href="/about"><strong>About</strong></button>
+                  </a>
+                  <a class="button is-primary" href="/application"><strong>Apply</strong></button>
                   </a> 
                   <a class="button is-primary" href="/dps-sims"><strong>DPS Sims</strong></button>
                   </a> 
@@ -87,7 +89,6 @@
             </div>
           </div>
         </nav>
-      </section>
       <!--Javascript to change theme on button press -->
       <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -143,9 +144,29 @@
 
         });
       </script>
+      <!-- close notification -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            const $notification = $delete.parentNode;
 
+            $delete.addEventListener('click', () => {
+              $notification.parentNode.removeChild($notification);
+            });
+          });
+        });
+      </script>
+    <!-- Start of notification -->
+    {% if show_noti %}
+      <div class="notification is-info has-text-centered">
+        <button class="delete is-large"></button>
+        <strong>Interested in joining the team???</strong>
+        Send us an application by visiting the <a href=/application>Apply page!</a>
+      </div>
+    {% endif %}
+    </section>
       <!--Start of Page Content -->        
-      <section class="section">
+      <section>
         {% block content %}{% endblock %}
       </section>
     </main>
@@ -156,7 +177,8 @@
     <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/application">Application</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/application">Apply</a></li>
         <li><a href="/dps-sims">DPS Sims</a></li>
       </ul>
     </nav>

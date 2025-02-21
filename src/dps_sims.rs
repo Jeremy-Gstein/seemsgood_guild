@@ -47,6 +47,7 @@ struct Player {
 #[derive(Template)]
 #[template(path = "dps-sims.html")]
 struct DamageSimsTemplate {
+    show_noti: bool,
     players: Vec<Player>,
 }
 
@@ -151,7 +152,7 @@ pub async fn damagesimspage() -> Html<String> {
 
     ];
 
-    let template = DamageSimsTemplate{ players };
+    let template = DamageSimsTemplate{ show_noti: true, players };
     let rendered = template.render().unwrap();
     Html(rendered)
 }
