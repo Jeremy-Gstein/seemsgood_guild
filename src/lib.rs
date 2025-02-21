@@ -5,8 +5,8 @@ use axum::response::Html;
 use include_dir::{include_dir, Dir};
 use askama_axum::Template;
 
+// Template logic for Damage Sims Page (dps_sims.rs)
 mod dps_sims;
-pub use dps_sims::*;
 
 
 static _TEMPLATES_DIR: Dir = include_dir!("templates");
@@ -15,7 +15,7 @@ fn router() -> Router {
     Router::new() 
         .route("/", get(homepage))
         .route("/application", get(applypage))
-        .route("/damagesims", get(damagesimspage))
+        .route("/damagesims", get(dps_sims::damagesimspage))
 }
 
 #[event(fetch)]
