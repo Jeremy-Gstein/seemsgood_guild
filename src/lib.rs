@@ -1,4 +1,4 @@
-use axum::{routing::get, Router};
+use axum::{routing::get, Router, response::Redirect};
 use tower_service::Service;
 use worker::*;
 use axum::response::Html;
@@ -17,6 +17,7 @@ fn router() -> Router {
         .route("/about", get(aboutpage))
         .route("/application", get(applypage))
         .route("/dps-sims", get(dps_sims::damagesimspage))
+        .fallback(Redirect::permanent("/"))
 }
 
 #[event(fetch)]
