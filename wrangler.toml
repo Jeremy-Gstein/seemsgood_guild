@@ -7,6 +7,6 @@ command = "cargo install -q worker-build && worker-build --release"
 
 [observability.logs]
 enabled = true
-head_sample_rate = 1
+head_sampling_rate = 1
 invocation_logs = true
 
