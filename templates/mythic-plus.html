@@ -1,0 +1,205 @@
+{% extends "layout.html" %}
+{% block content %}
+<head>
+	<style>
+	.raid-frame {
+		border-radius: 8px;
+		margin: 10px;
+		padding: 15px;
+		cursor: pointer;
+		transition: background-color 0.3s ease, transform 0.3s ease;
+	}
+
+	.raid-frame:hover {
+		transform: scale(1.05);
+	}
+
+	.mana-bar {
+		height: 8px;
+		background-color: rgba(0, 0, 0, 0.1);
+		margin-top: 10px;
+		border-radius: 4px;
+	}
+
+	.popup {
+		display: none;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		padding: 20px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		width: 60%;
+		max-width: 800px;
+		z-index: 9999;
+		border-radius: 8px;
+		max-height: 80vh; /* Limit the height of the popup */
+		overflow-y: auto; /* Allow scrolling if content exceeds the height */
+	}
+
+	.popup img {
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+	}
+
+	.popup h2 {
+		font-size: 1.5rem;
+		color: #363636;
+	}
+
+	.popup .close-btn {
+		cursor: pointer;
+		font-size: 20px;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		font-weight: bold;
+	}
+	.close-btn {
+		cursor: pointer;
+		font-size: 20px;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		font-weight: bold;
+	}
+	</style>
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Raid Frames</h1>
+
+        <!-- Loop through the players and render each player's frame -->
+        {% for player in players %}
+        <div class="raid-frame" id="raid-frame-{{ loop.index }}"
+             style="background-color: {{ player.class_rgb }};"
+             data-name="{{ player.name }}"
+             data-realm="{{ player.realm }}"
+             data-class="{{ player.class_rgb }}">
+            <h2 class="subtitle">{{ player.name }}</h2>
+            <div class="mana-bar"></div>
+        </div>
+        {% endfor %}
+
+        <!-- Notification section (if enabled) -->
+        {% if show_noti %}
+        <div class="notification is-primary">
+            New players have been added to the raid group!
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="popup" class="popup">
+        <!-- Popup content will be inserted here via JS -->
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("popup");
+
+        // Debug: Check if the elements exist
+        const raidFrames = document.querySelectorAll(".raid-frame");
+        console.log("Raid Frames: ", raidFrames);
+
+        // Function to handle raid frame click
+        function handleRaidFrameClick(player) {
+          // Debug: Log when clicked
+          console.log("Clicked player:", player);
+
+          const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
+
+          fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+              displayCharacterInfo(player, data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function displayCharacterInfo(player, character) {
+          // Generate HTML for recent runs
+          const recentRunsHTML = generateRecentRunsHTML(character.mythic_plus_recent_runs);
+
+          // Display the character information in the popup
+          const popupContent = `
+            <span onclick="closePopup()" style="cursor: pointer; position: absolute; top: 10px; right: 10px; font-size: 20px;">&times;</span>
+            <h2>${player.name} - ${player.class}</h2>
+            <img src="${character.thumbnail_url}" alt="Character Thumbnail">
+            <p>Race: ${character.race}</p>
+            <p>Class: ${character.class}</p>
+            <p>Spec: ${character.active_spec_name}</p>
+            <p>Role: ${character.active_spec_role}</p>
+            <p>Achievement Points: ${character.achievement_points}</p>
+            <p>Last Crawled At: ${character.last_crawled_at}</p>
+            <p>Profile URL: <a href="${character.profile_url}" target="_blank">${character.profile_url}</a></p>
+
+            <h3>Mythic Plus Recent Runs</h3>
+            ${recentRunsHTML}
+          `;
+
+          // Set the popup content
+          popup.innerHTML = popupContent;
+
+          // Show the popup
+          popup.style.display = "block";
+
+          // Add an event listener to close the popup when clicking outside of it
+          document.addEventListener("click", handleOutsideClick);
+
+          // Function to close the popup
+          function handleOutsideClick(event) {
+            if (!popup.contains(event.target)) {
+              // Click outside the popup, close it
+              closePopup();
+              // Remove the event listener after closing the popup
+              document.removeEventListener("click", handleOutsideClick);
+            }
+          }
+        }
+
+        // Function to generate HTML for recent runs
+        function generateRecentRunsHTML(recentRuns) {
+          return recentRuns.map(run => `
+            <p>Dungeon: ${run.dungeon}</p>
+            <p>Mythic Level: ${run.mythic_level}</p>
+            <p>Completed At: ${run.completed_at}</p>
+            <p>Clear Time (ms): ${run.clear_time_ms}</p>
+            <p>Par Time (ms): ${run.par_time_ms}</p>
+            <p>Num Keystone Upgrades: ${run.num_keystone_upgrades}</p>
+
+            <p>Affixes:</p>
+            <ul>
+              ${run.affixes.map(affix => `<li>${affix.name}: ${affix.description}</li>`).join('')}
+            </ul>
+
+            <p>URL: <a href="${run.url}" target="_blank">${run.url}</a></p>
+            <hr>
+          `).join('');
+        }
+
+        // Attach click listeners to raid frames
+        raidFrames.forEach(frame => {
+          frame.addEventListener("click", function() {
+            const player = {
+              name: frame.dataset.name,
+              realm: frame.dataset.realm,
+              class: frame.dataset.class
+            };
+            // Debug: Log when a frame is clicked
+            console.log("Player clicked:", player);
+            handleRaidFrameClick(player);
+          });
+        });
+
+        // Function to close the popup
+        window.closePopup = function() {
+          const popup = document.getElementById("popup");
+          popup.style.display = "none";
+        };
+      });
+    </script>
+</body>
+
+{% endblock %}

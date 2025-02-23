@@ -7,16 +7,18 @@ use askama_axum::Template;
 
 // Template logic for Damage Sims Page (dps_sims.rs)
 mod dps_sims;
+mod mythic_plus;
 
 
 static _TEMPLATES_DIR: Dir = include_dir!("templates");
 
 fn router() -> Router {
     Router::new() 
-        .route("/", get(homepage))
-        .route("/about", get(aboutpage))
-        .route("/application", get(applypage))
+        .route("/", get(home_page))
+        .route("/about", get(about_page))
+        .route("/application", get(apply_page))
         .route("/dps-sims", get(dps_sims::damagesimspage))
+        .route("/keys",  get(mythic_plus::mythicplus_page))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -37,7 +39,7 @@ struct IndexTemplate {
 }
 
 
-async fn homepage() -> Html<String> {
+async fn home_page() -> Html<String> {
     let template = IndexTemplate { show_noti: true };
     let rendered = template.render().unwrap();
     
@@ -50,7 +52,7 @@ struct ApplyTemplate {
     show_noti: bool,
 }
 
-async fn applypage() -> Html<String> {
+async fn apply_page() -> Html<String> {
     let template = ApplyTemplate { show_noti: false };
     let rendered = template.render().unwrap();
     Html(rendered)
@@ -62,8 +64,10 @@ struct AboutTemplate {
     show_noti: bool,
 }
 
-async fn aboutpage() -> Html<String> {
+async fn about_page() -> Html<String> {
     let template = AboutTemplate { show_noti: true };
     let rendered = template.render().unwrap();
     Html(rendered)
 }
+
+
