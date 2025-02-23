@@ -16,7 +16,7 @@
 
     .popup {
         display: none;
-        background-color: rgba(63, 43, 53, 0.29);
+        background-color: rgba(74, 79, 78, 0.98);
         position: fixed;
         top: 50%;
         left: 50%;
@@ -227,6 +227,7 @@
           });
         }
 
+
         // Add new player when the form is submitted
         addCharacterForm.addEventListener("submit", function(event) {
           event.preventDefault();
@@ -240,21 +241,31 @@
             return;
           }
 
+          // Create new raid frame (card)
           const newRaidFrame = document.createElement("div");
-          newRaidFrame.classList.add("raid-frame");
-          newRaidFrame.style.backgroundColor = classColors[playerClass];
-          newRaidFrame.dataset.name = playerName;
-          newRaidFrame.dataset.realm = playerRealm;
-          newRaidFrame.dataset.class = playerClass;
+          newRaidFrame.classList.add("cell");
+
+          const cardDiv = document.createElement("div");
+          cardDiv.classList.add("card", "raid-frame");
+          cardDiv.style.backgroundColor = classColors[playerClass];
+          cardDiv.dataset.name = playerName;
+          cardDiv.dataset.realm = playerRealm;
+          cardDiv.dataset.class = playerClass;
+
+          const cardContentDiv = document.createElement("div");
+          cardContentDiv.classList.add("card-content");
+
+          const contentDiv = document.createElement("div");
+          contentDiv.classList.add("content");
 
           const subtitle = document.createElement("h2");
-          subtitle.classList.add("subtitle");
-          subtitle.classList.add("has-text-centered");
-          subtitle.classList.add("has-text-black");
+          subtitle.classList.add("subtitle", "has-text-centered", "has-text-black");
           subtitle.textContent = playerName;
 
-
-          newRaidFrame.appendChild(subtitle);
+          contentDiv.appendChild(subtitle);
+          cardContentDiv.appendChild(contentDiv);
+          cardDiv.appendChild(cardContentDiv);
+          newRaidFrame.appendChild(cardDiv);
 
           // Add the new raid frame to the container
           document.getElementById("raidFramesContainer").appendChild(newRaidFrame);
