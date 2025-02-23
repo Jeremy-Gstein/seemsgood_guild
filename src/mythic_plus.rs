@@ -1,7 +1,7 @@
 use askama_axum::Template;
 
 #[derive(Debug)]
-pub enum PlayerClass {
+enum PlayerClass {
     Warrior,
     Mage,
     Rogue,
@@ -38,24 +38,17 @@ impl PlayerClass {
 }
 
 #[derive(Debug)]
-pub struct Player {
-    pub name: &'static str,
-    pub class: PlayerClass,
-    pub realm: &'static str,
+struct Player {
+    name: &'static str,
+    class: PlayerClass,
+    realm: &'static str,
 }
 
 #[derive(Template)]
 #[template(path = "mythic-plus.html")]
-pub struct RaidFramesTemplate {
-    pub show_noti: bool,
-    pub players: Vec<PlayerDisplay>,
-}
-
-#[derive(Debug)]
-pub struct PlayerDisplay {
-    pub name: &'static str,
-    pub class_rgb: &'static str,
-    pub realm: &'static str,
+struct RaidFramesTemplate {
+    show_noti: bool,
+    players: Vec<Player>,
 }
 
 pub async fn mythicplus_page() -> axum::response::Html<String> {
@@ -149,18 +142,9 @@ pub async fn mythicplus_page() -> axum::response::Html<String> {
     ];
 
 
-    // Mapping Player struct to PlayerDisplay to include class_rgb
-    let player_display: Vec<PlayerDisplay> = players.into_iter().map(|player| {
-        PlayerDisplay {
-            name: player.name,
-            class_rgb: player.class.rgb(),
-            realm: player.realm,
-        }
-    }).collect();
 
     // Rendering the template with the player data
-    let template = RaidFramesTemplate { show_noti: true, players: player_display };
+    let template = RaidFramesTemplate { show_noti: true, players };
     let rendered = template.render().unwrap();
     axum::response::Html(rendered)
 }
-

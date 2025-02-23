@@ -11,14 +11,7 @@
     }
 
     .raid-frame:hover {
-        transform: scale(1.05);
-    }
-
-    .mana-bar {
-        height: 8px;
-        background-color: rgba(0, 0, 0, 0.1);
-        margin-top: 10px;
-        border-radius: 4px;
+        transform: scale(1.1);
     }
 
     .popup {
@@ -27,8 +20,8 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         width: 60%;
         max-width: 800px;
         z-index: 9999;
@@ -60,7 +53,8 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Raid Frames</h1>
+        <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
+        <h3 class="subtitle has-text-centered">Data sourced from Raider.io Dont see your character?? add it using the form below!</h3>
 
         <!-- Form to Add Character -->
         <div class="add-character-form">
@@ -110,27 +104,21 @@
         </div>
 
         <!-- Loop through the players and render each player's frame -->
-        <div id="raidFramesContainer">
+        <div class="grid is-col-min-10" id="raidFramesContainer">
             {% for player in players %}
+            <div class="cell">
             <div class="raid-frame" id="raid-frame-{{ loop.index }}"
-                 style="background-color: {{ player.class_rgb }};"
+                 style="background-color: {{ player.class.rgb() }};"
                  data-name="{{ player.name }}"
                  data-realm="{{ player.realm }}"
-                 data-class="{{ player.class_rgb }}">
-                <h2 class="subtitle">{{ player.name }}</h2>
-                <div class="mana-bar"></div>
+                 data-class="{{ player.class.rgb() }}">
+                <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
+            </div>
             </div>
             {% endfor %}
         </div>
 
-        <!-- Notification section (if enabled) -->
-        {% if show_noti %}
-        <div class="notification is-primary">
-            New players have been added to the raid group!
-        </div>
-        {% endif %}
-    </div>
-
+       
     <div id="popup" class="popup">
         <!-- Popup content will be inserted here via JS -->
     </div>
@@ -176,14 +164,13 @@
 
           const popupContent = `
                 <span onclick="closePopup()" class="close-btn">&times;</span>
-                <h2>${player.name} - ${player.class}</h2>
+                <h2>${player.name}</h2>
                 <img src="${character.thumbnail_url}" alt="Character Thumbnail">
                 <p>Race: ${character.race}</p>
                 <p>Class: ${character.class}</p>
                 <p>Spec: ${character.active_spec_name}</p>
                 <p>Role: ${character.active_spec_role}</p>
                 <p>Achievement Points: ${character.achievement_points}</p>
-                <p>Last Crawled At: ${character.last_crawled_at}</p>
                 <p>Profile URL: <a href="${character.profile_url}" target="_blank">${character.profile_url}</a></p>
 
                 <h3>Mythic Plus Recent Runs</h3>
@@ -257,13 +244,12 @@
 
           const subtitle = document.createElement("h2");
           subtitle.classList.add("subtitle");
+          subtitle.classList.add("has-text-centered");
+          subtitle.classList.add("has-text-black");
           subtitle.textContent = playerName;
 
-          const manaBar = document.createElement("div");
-          manaBar.classList.add("mana-bar");
 
           newRaidFrame.appendChild(subtitle);
-          newRaidFrame.appendChild(manaBar);
 
           // Add the new raid frame to the container
           document.getElementById("raidFramesContainer").appendChild(newRaidFrame);
