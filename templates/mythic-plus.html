@@ -1,131 +1,174 @@
 {% extends "layout.html" %}
 {% block content %}
 <head>
-    <style>
+  <style>
     .raid-frame {
-        border-radius: 8px;
-        margin: 10px;
-        padding: 15px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
+      border-radius: 5px;
+      margin: 5px;
+      padding: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .raid-frame:hover {
-        transform: scale(1.1);
+      transform: scale(1.1);
     }
 
     .popup {
-        display: none;
-        background-color: rgba(0, 0, 0, 0.98); 
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 30px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        width: 60%;
-        max-width: 800px;
-        z-index: 9999;
-        border-radius: 8px;
-        max-height: 80vh; /* Limit the height of the popup */
-        overflow-y: auto; /* Allow scrolling if content exceeds the height */
+      display: none;
+      background-color: rgba(0, 0, 0, 0.8); 
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      width: 50%;
+      max-width: 800px;
+      z-index: 9999;
+      border-radius: 8px;
+      max-height: 80vh; /* Limit the height of the popup */
+      overflow-y: auto; /* Allow scrolling if content exceeds the height */
     }
 
     .popup img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      border-radius: 20%;
     }
 
     .popup h2 {
-        font-size: 2rem;
-        color: #c7f3ec;
+      font-size: 5rem;
+      color: #c7f3ec;
     }
 
     .popup .close-btn {
-        cursor: pointer;
-        font-size: 20px;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-weight: bold;
+      cursor: pointer;
+      font-size: 40px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-weight: bold;
     }
-    </style>
+
+    .popup .content {
+      max-height: 60vh; /* Limit height */
+      overflow-y: auto; /* Enable scrolling */
+      padding-right: 10px; /* Avoid scrollbar overlap */
+    }
+
+    /* Custom Scrollbar */
+    .popup .content::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .popup .content::-webkit-scrollbar-track {
+      background: #222;
+      border-radius: 8px;
+    }
+
+    .popup .content::-webkit-scrollbar-thumb {
+      background: #c7f3ec;
+      border-radius: 8px;
+      border: 2px solid #222;
+    }
+
+    .popup .content::-webkit-scrollbar-thumb:hover {
+      background: #8ce8dc;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const classButtons = document.querySelectorAll(".buttons.are-medium .button");
+      const playerClassInput = document.getElementById("playerClass");
+
+      classButtons.forEach(button => {
+        button.addEventListener("click", function(event) {
+          event.preventDefault(); // Prevents form submission
+
+          // Remove 'is-selected' from all buttons
+          classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary"));
+
+          // Mark clicked button as selected
+          button.classList.add("is-selected", "is-primary");
+
+          // Update hidden input value
+          playerClassInput.value = button.getAttribute("data-value");
+        });
+      });
+    });
+  </script>
 </head>
 <body>
+  <div class="container">
+    <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
+    <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
+
+    <!-- Form to Add Character -->
     <div class="container">
-        <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
-        <h3 class="subtitle has-text-centered">Data sourced from Raider.io Dont see your character?? add it using the form below!</h3>
-
-        <!-- Form to Add Character -->
-        <div class="add-character-form">
-            <h2 class="subtitle">Add Your Character</h2>
-            <form id="addCharacterForm">
-                <div class="field">
-                    <label class="label" for="playerName">Character Name</label>
-                    <div class="control">
-                        <input class="input" id="playerName" type="text" placeholder="Enter character name" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label" for="playerRealm">Realm</label>
-                    <div class="control">
-                        <input class="input" id="playerRealm" type="text" placeholder="Enter realm" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label" for="playerClass">Class</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="playerClass" required>
-                                <option value="">Select Class</option>
-                                <option value="Monk">Monk</option>
-                                <option value="DemonHunter">Demon Hunter</option>
-                                <option value="Evoker">Evoker</option>
-                                <option value="Shaman">Shaman</option>
-                                <option value="Priest">Priest</option>
-                                <option value="Paladin">Paladin</option>
-                                <option value="Druid">Druid</option>
-                                <option value="Hunter">Hunter</option>
-                                <option value="Mage">Mage</option>
-                                <option value="Warlock">Warlock</option>
-                                <option value="Rogue">Rogue</option>
-                                <option value="DeathKnight">Death Knight</option>
-                                <option value="Warrior">Warrior</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <button class="button is-primary" type="submit">Add Character</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Loop through the players and render each player's frame -->
-        <div class="grid is-col-min-10" id="raidFramesContainer">
-            {% for player in players %}
-            <div class="cell">
-            <div class="card raid-frame" id="raid-frame-{{ loop.index }}"
-                 style="background-color: {{ player.class.rgb() }};"
-                 data-name="{{ player.name }}"
-                 data-realm="{{ player.realm }}"
-                 data-class="{{ player.class.rgb() }}">
-              <div class="card-content">
-                <div class="content">
-                <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
-                </div>
-              </div>
+      <div class="add-character-form">
+        <form id="addCharacterForm" class="box">
+          <div class="field">
+            <div class="control">
+              <input class="input is-medium" id="playerName" type="text" placeholder="Enter character name" required>
             </div>
-            </div>
-            {% endfor %}
-        </div>
+          </div>
 
-       
+          <div class="field">
+            <div class="control">
+              <input class="input is-medium" id="playerRealm" type="text" placeholder="Enter realm" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="buttons are-medium">
+              <button type="button" class="button is-rounded" data-value="Monk">Monk</button>
+              <button type="button" class="button is-rounded" data-value="DemonHunter">Demon Hunter</button>
+              <button type="button" class="button is-rounded" data-value="Evoker">Evoker</button>
+              <button type="button" class="button is-rounded" data-value="Shaman">Shaman</button>
+              <button type="button" class="button is-rounded" data-value="Priest">Priest</button>
+              <button type="button" class="button is-rounded" data-value="Paladin">Paladin</button>
+              <button type="button" class="button is-rounded" data-value="Druid">Druid</button>
+              <button type="button" class="button is-rounded" data-value="Hunter">Hunter</button>
+              <button type="button" class="button is-rounded" data-value="Mage">Mage</button>
+              <button type="button" class="button is-rounded" data-value="Warlock">Warlock</button>
+              <button type="button" class="button is-rounded" data-value="Rogue">Rogue</button>
+              <button type="button" class="button is-rounded" data-value="DeathKnight">Death Knight</button>
+              <button type="button" class="button is-rounded" data-value="Warrior">Warrior</button>
+            </div>
+            <input type="hidden" id="playerClass" name="playerClass" required>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <button class="button is-rounded is-primary is-fullwidth" type="submit">Add Character</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Loop through the players and render each player's frame -->
+    <div class="grid is-col-min-10" id="raidFramesContainer">
+      {% for player in players %}
+      <div class="cell">
+        <div class="card raid-frame" id="raid-frame-{{ loop.index }}"
+                                     style="background-color: {{ player.class.rgb() }};"
+                                     data-name="{{ player.name }}"
+                                     data-realm="{{ player.realm }}"
+                                     data-class="{{ player.class.rgb() }}">
+          <div class="card-content">
+            <div class="content">
+              <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+
     <div id="popup" class="popup">
-        <!-- Popup content will be inserted here via JS -->
+      <!-- Popup content will be inserted here via JS -->
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
@@ -133,7 +176,8 @@
         const addCharacterForm = document.getElementById("addCharacterForm");
         const playerNameInput = document.getElementById("playerName");
         const playerRealmInput = document.getElementById("playerRealm");
-        const playerClassSelect = document.getElementById("playerClass");
+        const playerClassInput = document.getElementById("playerClass"); // Hidden input
+        const classButtons = document.querySelectorAll(".buttons.has-addons .button");
 
         // Class colors
         const classColors = {
@@ -152,7 +196,20 @@
           Warrior: "#C69B6D"
         };
 
-        // Function to handle raid frame click
+        classButtons.forEach(button => {
+          button.addEventListener("click", () => {
+            // Remove 'is-selected' from all buttons
+            classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary"));
+
+            // Mark clicked button as selected
+            button.classList.add("is-selected", "is-primary");
+
+            // Update hidden input value
+            playerClassInput.value = button.getAttribute("data-value");
+          });
+        });
+
+        // Handle raid frame click
         function handleRaidFrameClick(player) {
           const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
 
@@ -161,26 +218,58 @@
             .then(data => {
               displayCharacterInfo(player, data);
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch(error => console.error("Error fetching data:", error));
         }
 
         function displayCharacterInfo(player, character) {
           const recentRunsHTML = generateRecentRunsHTML(character.mythic_plus_recent_runs);
 
           const popupContent = `
-                <span onclick="closePopup()" class="close-btn">&times;</span>
-                <h2>${player.name}</h2>
-                <img src="${character.thumbnail_url}" alt="Character Thumbnail">
-                <p>Race: ${character.race}</p>
-                <p>Class: ${character.class}</p>
-                <p>Spec: ${character.active_spec_name}</p>
-                <p>Role: ${character.active_spec_role}</p>
-                <p>Achievement Points: ${character.achievement_points}</p>
-                <p>Profile URL: <a href="${character.profile_url}" target="_blank">${character.profile_url}</a></p>
+    <span onclick="closePopup()" class="close-btn">&times;</span>
+    <div class="card">
+        <div class="card-content">
+            <div class="has-text-centered">
+                <figure class="image is-128x128 is-inline-block">
+                    <img class="is-rounded" src="${character.thumbnail_url}" alt="Character Thumbnail">
+                </figure>
+                <p class="title is-4 mt-2">${player.name}</p>
+            </div>
 
-                <h3>Mythic Plus Recent Runs</h3>
-                ${recentRunsHTML}
-            `;
+            <table class="table is-striped is-fullwidth mt-4">
+                <tbody>
+                    <tr>
+                        <th>Race</th>
+                        <td>${character.race}</td>
+                    </tr>
+                    <tr>
+                        <th>Class</th>
+                        <td>${character.class}</td>
+                    </tr>
+                    <tr>
+                        <th>Spec</th>
+                        <td>${character.active_spec_name}</td>
+                    </tr>
+                    <tr>
+                        <th>Role</th>
+                        <td>${character.active_spec_role}</td>
+                    </tr>
+                    <tr>
+                        <th>Achievement Points</th>
+                        <td>${character.achievement_points}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Profile:</strong> <a href="${character.profile_url}" target="_blank">${character.profile_url}</a></p>
+
+            <h2 class="title is-5 mt-4">Mythic Plus Recent Runs</h2>
+            <hr>
+            ${recentRunsHTML}
+        </div>
+    </div>
+</div>
+
+                    `;
 
           popup.innerHTML = popupContent;
           popup.style.display = "block";
@@ -197,19 +286,31 @@
 
         function generateRecentRunsHTML(recentRuns) {
           return recentRuns.map(run => `
-                <p>Dungeon: ${run.dungeon}</p>
-                <p>Mythic Level: ${run.mythic_level}</p>
-                <p>Completed At: ${run.completed_at}</p>
-                <p>Clear Time (ms): ${run.clear_time_ms}</p>
-                <p>Par Time (ms): ${run.par_time_ms}</p>
-                <p>Num Keystone Upgrades: ${run.num_keystone_upgrades}</p>
-                <p>Affixes:</p>
-                <ul>
-                    ${run.affixes.map(affix => `<li>${affix.name}: ${affix.description}</li>`).join('')}
-                </ul>
-                <p>URL: <a href="${run.url}" target="_blank">${run.url}</a></p>
-                <hr>
-            `).join('');
+                <div class="card">
+                <div class="card-content">
+                <p class="title is-5">${run.dungeon}</p>
+                <table class="table is-striped is-fullwidth">
+                <tbody>
+                <tr>
+                    <th>Mythic Level</th>
+                    <td>${run.mythic_level}</td>
+                </tr>
+                <tr>
+                    <th>Completed At</th>
+                    <td><time datetime="${run.completed_at.split('T')[0]}">${run.completed_at.split('T')[0]}</time></td>
+                </tr>
+                <tr>
+                    <th>Num Keystone Upgrades</th>
+                    <td>${run.num_keystone_upgrades}</td>
+                </tr>
+                <tr>
+                    <th>URL</th>
+                    <td><a href="${run.url}" target="_blank">${run.url}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>`).join("");
         }
 
         // Attach click listeners to raid frames
@@ -227,14 +328,13 @@
           });
         }
 
-
         // Add new player when the form is submitted
         addCharacterForm.addEventListener("submit", function(event) {
           event.preventDefault();
 
           const playerName = playerNameInput.value.trim();
           const playerRealm = playerRealmInput.value.trim();
-          const playerClass = playerClassSelect.value.trim();
+          const playerClass = playerClassInput.value.trim(); // Get from hidden input
 
           if (!playerName || !playerRealm || !playerClass) {
             alert("Please fill out all fields.");
@@ -254,36 +354,29 @@
 
           const cardContentDiv = document.createElement("div");
           cardContentDiv.classList.add("card-content");
-
           const contentDiv = document.createElement("div");
           contentDiv.classList.add("content");
-
           const subtitle = document.createElement("h2");
           subtitle.classList.add("subtitle", "has-text-centered", "has-text-black");
           subtitle.textContent = playerName;
-
           contentDiv.appendChild(subtitle);
           cardContentDiv.appendChild(contentDiv);
           cardDiv.appendChild(cardContentDiv);
           newRaidFrame.appendChild(cardDiv);
-
           // Add the new raid frame to the container
           document.getElementById("raidFramesContainer").appendChild(newRaidFrame);
-
           // Re-attach click listeners to all raid frames, including the new one
           attachRaidFrameListeners();
-
           // Clear the form inputs
           playerNameInput.value = "";
           playerRealmInput.value = "";
-          playerClassSelect.value = "";
+          playerClassInput.value = ""; // Reset hidden input
+          classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary")); // Reset button selection
         });
-
         // Close the popup
         window.closePopup = function() {
           popup.style.display = "none";
         };
-
         // Initial attachment of click listeners when the page loads
         attachRaidFrameListeners();
       });
