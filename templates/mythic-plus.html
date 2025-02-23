@@ -16,6 +16,7 @@
 
     .popup {
         display: none;
+        background-color: rgba(63, 43, 53, 0.29);
         position: fixed;
         top: 50%;
         left: 50%;
@@ -107,12 +108,16 @@
         <div class="grid is-col-min-10" id="raidFramesContainer">
             {% for player in players %}
             <div class="cell">
-            <div class="raid-frame" id="raid-frame-{{ loop.index }}"
+            <div class="card raid-frame" id="raid-frame-{{ loop.index }}"
                  style="background-color: {{ player.class.rgb() }};"
                  data-name="{{ player.name }}"
                  data-realm="{{ player.realm }}"
                  data-class="{{ player.class.rgb() }}">
+              <div class="card-content">
+                <div class="content">
                 <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
+                </div>
+              </div>
             </div>
             </div>
             {% endfor %}

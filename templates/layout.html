@@ -26,72 +26,72 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
     <link rel="icon" type="image/png" href="https://r2.seemsgood.org/content/media/favicon-96x96.png" sizes="32x32" />
     <!--Javascript to change theme on button press -->
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const themeToggleButton = document.getElementById('theme-toggle');
-          const htmlElement = document.documentElement;
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
 
-          // Load saved theme from localStorage
-          const savedTheme = localStorage.getItem('theme');
-          if (savedTheme) {
-            htmlElement.classList.add(savedTheme);
+        // Load saved theme from localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          htmlElement.classList.add(savedTheme);
+        } else {
+          // check OS theme, match or overide if toggled manually
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            htmlElement.classList.add('theme-dark');
           } else {
-            // check OS theme, match or overide if toggled manually
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              htmlElement.classList.add('theme-dark');
-            } else {
-              htmlElement.classList.add('theme-light');
-            }
+            htmlElement.classList.add('theme-light');
           }
-          themeToggleButton.addEventListener('click', () => {
-            if (htmlElement.classList.contains('theme-dark')) {
-              htmlElement.classList.remove('theme-dark');
-              htmlElement.classList.add('theme-light');
-              localStorage.setItem('theme', 'theme-light');
-            } else {
-              htmlElement.classList.remove('theme-light');
-              htmlElement.classList.add('theme-dark');
-              localStorage.setItem('theme', 'theme-dark');
-            }
+        }
+        themeToggleButton.addEventListener('click', () => {
+          if (htmlElement.classList.contains('theme-dark')) {
+            htmlElement.classList.remove('theme-dark');
+            htmlElement.classList.add('theme-light');
+            localStorage.setItem('theme', 'theme-light');
+          } else {
+            htmlElement.classList.remove('theme-light');
+            htmlElement.classList.add('theme-dark');
+            localStorage.setItem('theme', 'theme-dark');
+          }
+        });
+      });
+    </script>
+    <!--Javascript from bulma css docs Source: https://bulma.io/documentation/components/navbar/#navbarJsExample-->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+          el.addEventListener('click', () => {
+
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+
           });
         });
-      </script>
-      <!--Javascript from bulma css docs Source: https://bulma.io/documentation/components/navbar/#navbarJsExample-->
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
 
-          // Get all "navbar-burger" elements
-          const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      });
+    </script>
+    <!-- close notification -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+          const $notification = $delete.parentNode;
 
-          // Add a click event on each of them
-          $navbarBurgers.forEach( el => {
-            el.addEventListener('click', () => {
-
-              // Get the target from the "data-target" attribute
-              const target = el.dataset.target;
-              const $target = document.getElementById(target);
-
-              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-              el.classList.toggle('is-active');
-              $target.classList.toggle('is-active');
-
-            });
-          });
-
-        });
-      </script>
-      <!-- close notification -->
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-            const $notification = $delete.parentNode;
-
-            $delete.addEventListener('click', () => {
-              $notification.parentNode.removeChild($notification);
-            });
+          $delete.addEventListener('click', () => {
+            $notification.parentNode.removeChild($notification);
           });
         });
-      </script>
+      });
+    </script>
 
   </head>
 
@@ -103,11 +103,9 @@
         <!-- start of navbar -->
         <nav class="navbar is-spaced has-shadow is-dark" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-              <figure class="image is-64x64 is-justify-content-center">
+            <figure class="image is-64x64 is-justify-content-center">
               <img  src="https://r2.seemsgood.org/content/media/guild-logo-removebg.png"/>
             </figure>
-            </a>
 
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarData">
               <span aria-hidden="true"></span>
@@ -161,15 +159,15 @@
             </div>
           </div>
         </nav>
-   <!-- Start of notification -->
-    {% if show_noti %}
-      <div class="notification is-info has-text-centered">
-        <button class="delete is-large"></button>
-        <strong>Interested in joining the team???</strong>
-        Send us an application by visiting the <a href=/application>Apply page!</a>
-      </div>
-    {% endif %}
-    </section>
+        <!-- Start of notification -->
+        {% if show_noti %}
+        <div class="notification is-info has-text-centered">
+          <button class="delete is-large"></button>
+          <strong>Interested in joining the team???</strong>
+          Send us an application by visiting the <a href=/application>Apply page!</a>
+        </div>
+        {% endif %}
+      </section>
       <!--Start of Page Content -->        
       <section>
         {% block content %}{% endblock %}
