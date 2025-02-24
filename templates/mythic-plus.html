@@ -2,13 +2,13 @@
 {% block content %}
 <head>
   <style>
-    .raid-frame {
-      border-radius: 5px;
-      margin: 5px;
-      padding: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
+.raid-frame {
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
     .raid-frame:hover {
       transform: scale(1.1);
@@ -76,6 +76,28 @@
     .popup .content::-webkit-scrollbar-thumb:hover {
       background: #8ce8dc;
     }
+    /* Ensure dropdown content is positioned correctly above other elements */
+    .dropdown {
+      position: relative; /* Ensure it's positioned relative to its container */
+      z-index: 9999; /* Ensure the dropdown appears above other elements */
+    }
+    
+    .dropdown-menu {
+      position: absolute; /* Position it directly below the input */
+        width: 100%; /* Match the width of the input */
+        top: 100%; /* Position the dropdown below the input field */
+        left: 0; /* Align it with the left side of the input */
+        z-index: 20; /* Higher z-index to make sure the dropdown shows up above other content */
+        max-height: 200px; /* Optional: Limit the height of the dropdown */
+        overflow-y: auto; /* Enable scrolling if there are many options */
+        border-radius: 4px; /* Optional: Round the corners of the dropdown */
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -103,22 +125,90 @@
   <div class="container">
     <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
     <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
-
     <!-- Form to Add Character -->
     <div class="container">
       <div class="add-character-form">
         <form id="addCharacterForm" class="box">
           <div class="field">
             <div class="control">
-              <input class="input is-medium" id="playerName" type="text" placeholder="Enter character name" required>
+              <input class="input is-medium" id="playerName" type="text" placeholder="Enter name" required autocomplete="off">
             </div>
           </div>
-
           <div class="field">
             <div class="control">
-              <input class="input is-medium" id="playerRealm" type="text" placeholder="Enter realm" required>
+              <input class="input is-medium is-rounded" id="playerRealm" type="text" placeholder="Enter realm" required autocomplete="off">
+            </div>
+
+            <!-- Dropdown for Suggestions -->
+            <div class="dropdown" id="dropdownList">
+              <div class="dropdown-menu" id="dropdownMenu" role="menu">
+                <div class="dropdown-content" id="dropdownOptions">
+                  <!-- Dynamic options will be inserted here -->
+                </div>
+              </div>
             </div>
           </div>
+          <script>
+            // Declare a variable to store server names
+            let serverNames = [];
+
+            // Fetch the server names from the R2 bucket (URL of your `servers.json`)
+            fetch('https://r2.seemsgood.org/content/servers.json')
+              .then(response => response.json())  // Parse the JSON response
+              .then(data => {
+                serverNames = data;  // Store the fetched server names in the serverNames variable
+              })
+              .catch(error => {
+                console.error('Error loading servers:', error);
+              });
+
+            // Get the necessary elements
+            const inputField = document.getElementById("playerRealm");
+            const dropdown = document.getElementById("dropdownList");
+            const optionsContainer = document.getElementById("dropdownOptions");
+
+            // Function to filter and display suggestions
+            inputField.addEventListener("input", function() {
+              const value = inputField.value.toLowerCase();
+
+              // Clear previous options
+              optionsContainer.innerHTML = '';
+
+              // Filter and add matching options (only if serverNames has been loaded)
+              if (serverNames.length > 0) {
+                const filteredServers = serverNames.filter(server => server.toLowerCase().includes(value));
+
+                // Show or hide the dropdown based on input
+                if (filteredServers.length > 0) {
+                  dropdown.classList.add("is-active");  // Show the dropdown
+                } else {
+                  dropdown.classList.remove("is-active");  // Hide the dropdown
+                }
+
+                // Add matching options to the dropdown
+                filteredServers.forEach(server => {
+                  const option = document.createElement("a");
+                  option.classList.add("dropdown-item");
+                  option.textContent = server;
+
+                  // When an option is clicked, set the input field's value
+                  option.addEventListener("click", function() {
+                    inputField.value = server;
+                    dropdown.classList.remove("is-active");  // Hide the dropdown after selection
+                  });
+
+                  optionsContainer.appendChild(option);
+                });
+              }
+            });
+
+            // Optional: Hide the dropdown if the user clicks outside of it
+            document.addEventListener("click", function(event) {
+              if (!dropdown.contains(event.target) && event.target !== inputField) {
+                dropdown.classList.remove("is-active");
+              }
+            });
+          </script>
 
           <div class="field">
             <div class="buttons has-addons are-medium">
@@ -147,7 +237,8 @@
         </form>
       </div>
     </div>
-    <!-- Loop through the players and render each player's frame -->
+
+   <!-- Loop through the players and render each player's frame -->
     <div class="grid is-col-min-10" id="raidFramesContainer">
       {% for player in players %}
       <div class="cell">
