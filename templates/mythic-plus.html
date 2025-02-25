@@ -95,6 +95,13 @@
     }
   </style>
   <script>
+    // We remove meta tags that render when embeding this specific page.
+    // Remove Twitter meta tags
+    document.querySelectorAll('meta[property^="twitter:"]').forEach(tag => tag.remove());
+    // Remove Open Graph meta tags
+    document.querySelectorAll('meta[property^="og:"]').forEach(tag => tag.remove());
+  </script>
+  <script>
     document.addEventListener("DOMContentLoaded", function() {
       const classButtons = document.querySelectorAll(".buttons.are-medium .button");
       const playerClassInput = document.getElementById("playerClass");
