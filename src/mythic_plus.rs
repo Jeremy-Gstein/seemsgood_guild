@@ -61,6 +61,7 @@ pub async fn mythicplus_page() -> axum::response::Html<String> {
         Player { name: "Delusionil", class: PlayerClass::Priest, realm: "Stormrage" },
         Player { name: "Evelianne", class: PlayerClass::Monk, realm: "Stormrage" },
         Player { name: "Pipmeow", class: PlayerClass::Druid, realm: "Tichondrius" },
+        Player { name: "Infilicious", class: PlayerClass::Mage, realm: "Stormrage" },
         Player { name: "Bigtittyrog", class: PlayerClass::Druid, realm: "Stormrage" },
         Player { name: "Hekthuzad", class: PlayerClass::Mage, realm: "Stormrage" },
         Player { name: "Indico", class: PlayerClass::Evoker, realm: "Zul'jin" },
