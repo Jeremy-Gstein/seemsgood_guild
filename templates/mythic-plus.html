@@ -18,16 +18,15 @@
       display: none;
       background-color: rgba(0, 0, 0, 0.8); 
       position: fixed;
-      top: 40%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       padding: 5px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-      width: 50%;
       max-width: 800px;
-      z-index: 9999;
+      z-index: 9998;
       border-radius: 8px;
-      max-height: 80vh; /* Limit the height of the popup */
+      max-height: 70vh; /* Limit the height of the popup */
       overflow-y: auto; /* Allow scrolling if content exceeds the height */
     }
 
@@ -40,9 +39,8 @@
     .popup .close-btn {
       cursor: pointer;
       font-size: 40px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
+      position: fixed;
+      right: 8px;
       font-weight: bold;
     }
 
@@ -52,26 +50,7 @@
       padding-right: 10px; /* Avoid scrollbar overlap */
     }
 
-    /* Custom Scrollbar */
-    .popup .content::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .popup .content::-webkit-scrollbar-track {
-      background: #222;
-      border-radius: 8px;
-    }
-
-    .popup .content::-webkit-scrollbar-thumb {
-      background: #c7f3ec;
-      border-radius: 8px;
-      border: 2px solid #222;
-    }
-
-    .popup .content::-webkit-scrollbar-thumb:hover {
-      background: #8ce8dc;
-    }
-    /* Ensure dropdown content is positioned correctly above other elements */
+        /* Ensure dropdown content is positioned correctly above other elements */
     .dropdown {
       position: relative; /* Ensure it's positioned relative to its container */
       z-index: 9999; /* Ensure the dropdown appears above other elements */
@@ -305,8 +284,8 @@
           const recentRunsHTML = generateRecentRunsHTML(character.mythic_plus_recent_runs);
 
           const popupContent = `
-    <span onclick="closePopup()" class="close-btn">&times;</span>
     <div class="card">
+     <span onclick="closePopup()" class="close-btn">&times;</span>
         <div class="card-content">
             <div class="has-text-centered">
                 <figure class="image is-128x128 is-inline-block">
