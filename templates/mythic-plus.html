@@ -13,7 +13,29 @@
     .raid-frame:hover {
       transform: scale(1.1);
     }
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+    }
 
+    .loader {
+      width: 1em;
+      height: 1em;
+      border: 0.2em solid #3273dc;
+      border-top: 0.2em solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     .popup {
       display: none;
       background-color: rgba(0, 0, 0, 0.8); 
@@ -151,8 +173,11 @@
     });
   </script>
   </head>
-<body>
-  <div class="container">
+  <body>
+     <div id="loading-overlay" class="is-justify-content-center is-align-items-center" style="display: none;">
+        <div class="loader is-size-1"></div>
+      </div>
+    <div class="container">
     <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
     <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
     <!-- Form to Add Character -->
@@ -225,7 +250,6 @@
       {% endfor %}
     </div>
 
-
     <div id="popup" class="popup">
       <!-- Popup content will be inserted here via JS -->
     </div>
@@ -268,16 +292,22 @@
           });
         });
 
-        // Handle raid frame click
-        function handleRaidFrameClick(player) {
-          const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
+          // Handle raid frame click
+          function handleRaidFrameClick(player) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
 
           fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
               displayCharacterInfo(player, data);
+              document.getElementById('loading-overlay').style.display = 'none';
             })
-            .catch(error => console.error("Error fetching data:", error));
+            .catch(error => {
+              console.error("Error fetching data:", error);
+              document.getElementById('loading-overlay').style.display = 'none';
+              alert("Character not found!")
+            });
         }
 
         function displayCharacterInfo(player, character) {
