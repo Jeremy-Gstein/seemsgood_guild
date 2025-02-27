@@ -172,88 +172,7 @@
       });
     });
   </script>
-  </head>
-  <body>
-     <div id="loading-overlay" class="is-justify-content-center is-align-items-center" style="display: none;">
-        <div class="loader is-size-1"></div>
-      </div>
-    <div class="container">
-    <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
-    <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
-    <!-- Form to Add Character -->
-    <div class="container">
-      <div class="add-character-form">
-        <form id="addCharacterForm" class="box">
-          <div class="field">
-            <div class="control">
-              <input class="input is-medium is-rounded" id="playerName" type="text" placeholder="Enter Name" required autocomplete="off">
-            </div>
-          </div>
-          <div class="field">
-            <div class="control">
-              <input class="input is-medium is-rounded" id="playerRealm" type="text" placeholder="Enter Realm" required autocomplete="off">
-            </div>
-
-            <!-- Dropdown for Suggestions -->
-            <div class="dropdown" id="dropdownList">
-              <div class="dropdown-menu" id="dropdownMenu" role="menu">
-                <div class="dropdown-content" id="dropdownOptions">
-                  <!-- Dynamic options will be inserted here -->
-                </div>
-              </div>
-            </div>
-          </div>
-         <div class="field">
-            <div class="buttons has-addons are-medium">
-              <button type="button" class="button" data-value="Monk">Monk</button>
-              <button type="button" class="button" data-value="DemonHunter">Demon Hunter</button>
-              <button type="button" class="button" data-value="Evoker">Evoker</button>
-              <button type="button" class="button" data-value="Shaman">Shaman</button>
-              <button type="button" class="button" data-value="Priest">Priest</button>
-              <button type="button" class="button" data-value="Paladin">Paladin</button>
-              <button type="button" class="button" data-value="Druid">Druid</button>
-              <button type="button" class="button" data-value="Hunter">Hunter</button>
-              <button type="button" class="button" data-value="Mage">Mage</button>
-              <button type="button" class="button" data-value="Warlock">Warlock</button>
-              <button type="button" class="button" data-value="Rogue">Rogue</button>
-              <button type="button" class="button" data-value="DeathKnight">Death Knight</button>
-              <button type="button" class="button" data-value="Warrior">Warrior</button>
-            </div>
-            <input type="hidden" id="playerClass" name="playerClass" required>
-          </div>
-
-          <div class="field">
-            <div class="control">
-              <button class="button is-rounded is-primary is-fullwidth" type="submit">Add Character</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Loop through the players and render each player's frame -->
-    <div class="grid is-col-min-10" id="raidFramesContainer">
-      {% for player in players %}
-      <div class="cell">
-        <div class="card raid-frame" id="raid-frame-{{ loop.index }}"
-                                     style="background-color: {{ player.class.rgb() }};"
-                                     data-name="{{ player.name }}"
-                                     data-realm="{{ player.realm }}"
-                                     data-class="{{ player.class.rgb() }}">
-          <div class="card-content">
-            <div class="content">
-              <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-
-    <div id="popup" class="popup">
-      <!-- Popup content will be inserted here via JS -->
-    </div>
-    <script>
+  <script>
       document.addEventListener("DOMContentLoaded", function() {
         const popup = document.getElementById("popup");
         const addCharacterForm = document.getElementById("addCharacterForm");
@@ -471,6 +390,94 @@
         attachRaidFrameListeners();
       });
     </script>
+
+  </head>
+
+
+  
+
+
+
+  <body>
+     <div id="loading-overlay" class="is-justify-content-center is-align-items-center" style="display: none;">
+        <div class="loader is-size-1"></div>
+      </div>
+    <div class="container">
+    <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
+    <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
+    <!-- Form to Add Character -->
+    <div class="container">
+      <div class="add-character-form">
+        <form id="addCharacterForm" class="box">
+          <div class="field">
+            <div class="control">
+              <input class="input is-medium is-rounded" id="playerName" type="text" placeholder="Enter Name" required autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input class="input is-medium is-rounded" id="playerRealm" type="text" placeholder="Enter Realm" required autocomplete="off">
+            </div>
+
+            <!-- Dropdown for Suggestions -->
+            <div class="dropdown" id="dropdownList">
+              <div class="dropdown-menu" id="dropdownMenu" role="menu">
+                <div class="dropdown-content" id="dropdownOptions">
+                  <!-- Dynamic options will be inserted here -->
+                </div>
+              </div>
+            </div>
+          </div>
+         <div class="field">
+            <div class="buttons has-addons are-medium">
+              <button type="button" class="button" data-value="Monk">Monk</button>
+              <button type="button" class="button" data-value="DemonHunter">Demon Hunter</button>
+              <button type="button" class="button" data-value="Evoker">Evoker</button>
+              <button type="button" class="button" data-value="Shaman">Shaman</button>
+              <button type="button" class="button" data-value="Priest">Priest</button>
+              <button type="button" class="button" data-value="Paladin">Paladin</button>
+              <button type="button" class="button" data-value="Druid">Druid</button>
+              <button type="button" class="button" data-value="Hunter">Hunter</button>
+              <button type="button" class="button" data-value="Mage">Mage</button>
+              <button type="button" class="button" data-value="Warlock">Warlock</button>
+              <button type="button" class="button" data-value="Rogue">Rogue</button>
+              <button type="button" class="button" data-value="DeathKnight">Death Knight</button>
+              <button type="button" class="button" data-value="Warrior">Warrior</button>
+            </div>
+            <input type="hidden" id="playerClass" name="playerClass" required>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <button class="button is-rounded is-primary is-fullwidth" type="submit">Add Character</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Loop through the players and render each player's frame -->
+    <div class="grid is-col-min-10" id="raidFramesContainer">
+      {% for player in players %}
+      <div class="cell">
+        <div class="card raid-frame" id="raid-frame-{{ loop.index }}"
+                                     style="background-color: {{ player.class.rgb() }};"
+                                     data-name="{{ player.name }}"
+                                     data-realm="{{ player.realm }}"
+                                     data-class="{{ player.class.rgb() }}">
+          <div class="card-content">
+            <div class="content">
+              <h2 class="subtitle has-text-centered has-text-black">{{ player.name }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div id="popup" class="popup">
+      <!-- Popup content will be inserted here via JS -->
+    </div>
 </body>
 
 {% endblock %}
