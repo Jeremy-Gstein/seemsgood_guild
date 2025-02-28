@@ -42,7 +42,7 @@
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.9);
       padding: 5px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
       max-width: 800px;
@@ -50,6 +50,14 @@
       border-radius: 8px;
       max-height: 70vh; /* Limit the height of the popup */
       overflow-y: auto; /* Allow scrolling if content exceeds the height */
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .popup.show {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
     .popup img {
@@ -59,10 +67,10 @@
 
 
     .popup .close-btn {
-      cursor: pointer;
-      font-size: 40px;
       position: fixed;
       right: 8px;
+      cursor: pointer;
+      font-size: 40px;
       font-weight: bold;
     }
 
@@ -72,7 +80,7 @@
       padding-right: 10px; /* Avoid scrollbar overlap */
     }
 
-        /* Ensure dropdown content is positioned correctly above other elements */
+    /* Ensure dropdown content is positioned correctly above other elements */
     .dropdown {
       position: relative; /* Ensure it's positioned relative to its container */
       z-index: 9999; /* Ensure the dropdown appears above other elements */
@@ -173,66 +181,66 @@
     });
   </script>
   <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const popup = document.getElementById("popup");
-        const addCharacterForm = document.getElementById("addCharacterForm");
-        const playerNameInput = document.getElementById("playerName");
-        const playerRealmInput = document.getElementById("playerRealm");
-        const playerClassInput = document.getElementById("playerClass"); // Hidden input
-        const classButtons = document.querySelectorAll(".buttons.has-addons .button");
+    document.addEventListener("DOMContentLoaded", function() {
+      const popup = document.getElementById("popup");
+      const addCharacterForm = document.getElementById("addCharacterForm");
+      const playerNameInput = document.getElementById("playerName");
+      const playerRealmInput = document.getElementById("playerRealm");
+      const playerClassInput = document.getElementById("playerClass"); // Hidden input
+      const classButtons = document.querySelectorAll(".buttons.has-addons .button");
 
-        // Class colors
-        const classColors = {
-          DeathKnight: "#C41E3A",
-          DemonHunter: "#A330C9",
-          Druid: "#FF7C0A",
-          Evoker: "#33937F",
-          Hunter: "#AAD372",
-          Mage: "#3FC7EB",
-          Monk: "#00FF98",
-          Paladin: "#F48CBA",
-          Priest: "#FFFFFF",
-          Rogue: "#FFF468",
-          Shaman: "#0070DD",
-          Warlock: "#8788EE",
-          Warrior: "#C69B6D"
-        };
+      // Class colors
+      const classColors = {
+        DeathKnight: "#C41E3A",
+        DemonHunter: "#A330C9",
+        Druid: "#FF7C0A",
+        Evoker: "#33937F",
+        Hunter: "#AAD372",
+        Mage: "#3FC7EB",
+        Monk: "#00FF98",
+        Paladin: "#F48CBA",
+        Priest: "#FFFFFF",
+        Rogue: "#FFF468",
+        Shaman: "#0070DD",
+        Warlock: "#8788EE",
+        Warrior: "#C69B6D"
+      };
 
-        classButtons.forEach(button => {
-          button.addEventListener("click", () => {
-            // Remove 'is-selected' from all buttons
-            classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary"));
+      classButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          // Remove 'is-selected' from all buttons
+          classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary"));
 
-            // Mark clicked button as selected
-            button.classList.add("is-selected", "is-primary");
+          // Mark clicked button as selected
+          button.classList.add("is-selected", "is-primary");
 
-            // Update hidden input value
-            playerClassInput.value = button.getAttribute("data-value");
-          });
+          // Update hidden input value
+          playerClassInput.value = button.getAttribute("data-value");
         });
+      });
 
-          // Handle raid frame click
-          function handleRaidFrameClick(player) {
-            document.getElementById('loading-overlay').style.display = 'flex';
-            const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
+      // Handle raid frame click
+      function handleRaidFrameClick(player) {
+        document.getElementById('loading-overlay').style.display = 'flex';
+        const apiUrl = `https://raider.io/api/v1/characters/profile?region=us&realm=${player.realm}&name=${player.name}&fields=mythic_plus_recent_runs`;
 
-          fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-              displayCharacterInfo(player, data);
-              document.getElementById('loading-overlay').style.display = 'none';
-            })
-            .catch(error => {
-              console.error("Error fetching data:", error);
-              document.getElementById('loading-overlay').style.display = 'none';
-              alert("Character not found!")
-            });
-        }
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            displayCharacterInfo(player, data);
+            document.getElementById('loading-overlay').style.display = 'none';
+          })
+          .catch(error => {
+            console.error("Error fetching data:", error);
+            document.getElementById('loading-overlay').style.display = 'none';
+            alert("Character not found!")
+          });
+      }
 
-        function displayCharacterInfo(player, character) {
-          const recentRunsHTML = generateRecentRunsHTML(character.mythic_plus_recent_runs);
+      function displayCharacterInfo(player, character) {
+        const recentRunsHTML = generateRecentRunsHTML(character.mythic_plus_recent_runs);
 
-          const popupContent = `
+        const popupContent = `
     <div class="card">
      <span onclick="closePopup()" class="close-btn">&times;</span>
         <div class="card-content">
@@ -279,22 +287,23 @@
 
                     `;
 
-          popup.innerHTML = popupContent;
-          popup.style.display = "block";
-          popup.scrollTop = 0;
+        popup.innerHTML = popupContent;
+        popup.style.display = "block";
+        setTimeout(() => popup.classList.add('show'), 10);
+        popup.scrollTop = 0;
 
-          document.addEventListener("click", handleOutsideClick);
+        document.addEventListener("click", handleOutsideClick);
 
-          function handleOutsideClick(event) {
-            if (!popup.contains(event.target)) {
-              closePopup();
-              document.removeEventListener("click", handleOutsideClick);
-            }
+        function handleOutsideClick(event) {
+          if (!popup.contains(event.target)) {
+            window.closePopup();
+            document.removeEventListener("click", handleOutsideClick);
           }
         }
+      }
 
-        function generateRecentRunsHTML(recentRuns) {
-          return recentRuns.map(run => `
+      function generateRecentRunsHTML(recentRuns) {
+        return recentRuns.map(run => `
                 <div class="card">
                 <div class="card-content">
                 <p class="title is-5">${run.dungeon}</p>
@@ -320,89 +329,91 @@
         </table>
     </div>
 </div>`).join('');
-        }
+      }
 
-        // Attach click listeners to raid frames
-        function attachRaidFrameListeners() {
-          const raidFrames = document.querySelectorAll(".raid-frame");
-          raidFrames.forEach(frame => {
-            frame.addEventListener("click", function() {
-              const player = {
-                name: frame.dataset.name,
-                realm: frame.dataset.realm,
-                class: frame.dataset.class
-              };
-              handleRaidFrameClick(player);
-            });
+      // Attach click listeners to raid frames
+      function attachRaidFrameListeners() {
+        const raidFrames = document.querySelectorAll(".raid-frame");
+        raidFrames.forEach(frame => {
+          frame.addEventListener("click", function() {
+            const player = {
+              name: frame.dataset.name,
+              realm: frame.dataset.realm,
+              class: frame.dataset.class
+            };
+            handleRaidFrameClick(player);
           });
+        });
+      }
+
+      // Add new player when the form is submitted
+      addCharacterForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const playerName = playerNameInput.value.trim();
+        const playerRealm = playerRealmInput.value.trim();
+        const playerClass = playerClassInput.value.trim(); // Get from hidden input
+
+        if (!playerName || !playerRealm || !playerClass) {
+          alert("Please fill out all fields.");
+          return;
         }
 
-        // Add new player when the form is submitted
-        addCharacterForm.addEventListener("submit", function(event) {
-          event.preventDefault();
+        // Create new raid frame (card)
+        const newRaidFrame = document.createElement("div");
+        newRaidFrame.classList.add("cell");
 
-          const playerName = playerNameInput.value.trim();
-          const playerRealm = playerRealmInput.value.trim();
-          const playerClass = playerClassInput.value.trim(); // Get from hidden input
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card", "raid-frame");
+        cardDiv.style.backgroundColor = classColors[playerClass];
+        cardDiv.dataset.name = playerName;
+        cardDiv.dataset.realm = playerRealm;
+        cardDiv.dataset.class = playerClass;
 
-          if (!playerName || !playerRealm || !playerClass) {
-            alert("Please fill out all fields.");
-            return;
-          }
-
-          // Create new raid frame (card)
-          const newRaidFrame = document.createElement("div");
-          newRaidFrame.classList.add("cell");
-
-          const cardDiv = document.createElement("div");
-          cardDiv.classList.add("card", "raid-frame");
-          cardDiv.style.backgroundColor = classColors[playerClass];
-          cardDiv.dataset.name = playerName;
-          cardDiv.dataset.realm = playerRealm;
-          cardDiv.dataset.class = playerClass;
-
-          const cardContentDiv = document.createElement("div");
-          cardContentDiv.classList.add("card-content");
-          const contentDiv = document.createElement("div");
-          contentDiv.classList.add("content");
-          const subtitle = document.createElement("h2");
-          subtitle.classList.add("subtitle", "has-text-centered", "has-text-black");
-          subtitle.textContent = playerName;
-          contentDiv.appendChild(subtitle);
-          cardContentDiv.appendChild(contentDiv);
-          cardDiv.appendChild(cardContentDiv);
-          newRaidFrame.appendChild(cardDiv);
-          // Add the new raid frame to the container
-          document.getElementById("raidFramesContainer").prepend(newRaidFrame);
-          // Re-attach click listeners to all raid frames, including the new one
-          attachRaidFrameListeners();
-          // Clear the form inputs
-          playerNameInput.value = "";
-          playerRealmInput.value = "";
-          playerClassInput.value = ""; // Reset hidden input
-          classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary")); // Reset button selection
-        });
-        // Close the popup
-        window.closePopup = function() {
-          popup.style.display = "none";
-        };
-        // Initial attachment of click listeners when the page loads
+        const cardContentDiv = document.createElement("div");
+        cardContentDiv.classList.add("card-content");
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("content");
+        const subtitle = document.createElement("h2");
+        subtitle.classList.add("subtitle", "has-text-centered", "has-text-black");
+        subtitle.textContent = playerName;
+        contentDiv.appendChild(subtitle);
+        cardContentDiv.appendChild(contentDiv);
+        cardDiv.appendChild(cardContentDiv);
+        newRaidFrame.appendChild(cardDiv);
+        // Add the new raid frame to the container
+        document.getElementById("raidFramesContainer").prepend(newRaidFrame);
+        // Re-attach click listeners to all raid frames, including the new one
         attachRaidFrameListeners();
+        // Clear the form inputs
+        playerNameInput.value = "";
+        playerRealmInput.value = "";
+        playerClassInput.value = ""; // Reset hidden input
+        classButtons.forEach(btn => btn.classList.remove("is-selected", "is-primary")); // Reset button selection
       });
-    </script>
+      // Close the popup
+      window.closePopup = function() {
+        const popup = document.getElementById("popup");
+        popup.classList.remove('show');
+        popup.style.display = "none";
+      };
+      // Initial attachment of click listeners when the page loads
+      attachRaidFrameListeners();
+    });
+  </script>
 
-  </head>
-
-
-  
+</head>
 
 
 
-  <body>
-     <div id="loading-overlay" class="is-justify-content-center is-align-items-center" style="display: none;">
-        <div class="loader is-size-1"></div>
-      </div>
-    <div class="container">
+
+
+
+<body>
+  <div id="loading-overlay" class="is-justify-content-center is-align-items-center" style="display: none;">
+    <div class="loader is-size-1"></div>
+  </div>
+  <div class="container">
     <h1 class="title has-text-centered">Mythic+ Dashboard</h1>
     <h3 class="subtitle has-text-centered">Dont see your character?? add it using the form below!</h3>
     <!-- Form to Add Character -->
@@ -428,7 +439,7 @@
               </div>
             </div>
           </div>
-         <div class="field">
+          <div class="field">
             <div class="buttons has-addons are-medium">
               <button type="button" class="button" data-value="Monk">Monk</button>
               <button type="button" class="button" data-value="DemonHunter">Demon Hunter</button>
