@@ -72,7 +72,7 @@ pub async fn mythicplus_page() -> axum::response::Html<String> {
         Player { name: "Speara", class: PlayerClass::Druid, realm: "Kel'Thuzad" },
         //out for season Player { name: "Vinnea", class: PlayerClass::Shaman, realm: "Kel'Thuzad" },
         Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage" },
-        Player { name: "Dubshamm", class: PlayerClass::Shaman, realm: "Proudmoore" },
+        Player { name: "Dubshamm", class: PlayerClass::Shaman, realm: "Stormrage" },
         Player { name: "Chuubers", class: PlayerClass::Warrior, realm: "Stormrage" },
         Player { name: "Crsete", class: PlayerClass::Rogue, realm: "Tichondrius" },
         //out for season Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'jin" },
