@@ -54,39 +54,33 @@ struct RaidFramesTemplate {
 pub async fn mythicplus_page() -> axum::response::Html<String> {
     // Creating the list of players, including class RGB
     let players = vec![
-        Player { name: "Ohioforluvrz", class: PlayerClass::DeathKnight, realm: "Stormrage" },
+        Player { name: "Jtusendh", class: PlayerClass::DemonHunter, realm: "Stormrage" },
         Player { name: "Paliduh", class: PlayerClass::Paladin, realm: "Stormrage" },
-        Player { name: "Auraelia", class: PlayerClass::Priest, realm: "Zul'jin" },
-        Player { name: "Caael", class: PlayerClass::Paladin, realm: "Zul'jin" },
-        Player { name: "Delusionil", class: PlayerClass::Priest, realm: "Stormrage" },
+        Player { name: "Delusionol", class: PlayerClass::Priest, realm: "Stormrage" },
         Player { name: "Evelianne", class: PlayerClass::Monk, realm: "Stormrage" },
         Player { name: "Pipmeow", class: PlayerClass::Druid, realm: "Tichondrius" },
+        Player { name: "Auraelia", class: PlayerClass::Priest, realm: "Zul'jin" },
+        Player { name: "Caael", class: PlayerClass::Paladin, realm: "Zul'jin" },
         Player { name: "Infilicious", class: PlayerClass::Mage, realm: "Stormrage" },
-        Player { name: "Bigtittyrog", class: PlayerClass::Druid, realm: "Stormrage" },
+        // out for season Player { name: "Bigtittyrog", class: PlayerClass::Druid, realm: "Stormrage" },
         Player { name: "Hekthuzad", class: PlayerClass::Mage, realm: "Stormrage" },
         Player { name: "Indico", class: PlayerClass::Evoker, realm: "Zul'jin" },
-        Player { name: "Emlay", class: PlayerClass::Priest, realm: "Sargeras" },
         Player { name: "Ladöra", class: PlayerClass::Priest, realm: "Stormrage" },
         Player { name: "Lanathallan", class: PlayerClass::Warlock, realm: "Stormrage" },
         Player { name: "Notshodo", class: PlayerClass::Evoker, realm: "Stormrage" },
         Player { name: "Kolzane", class: PlayerClass::Hunter, realm: "Ysera" },
         Player { name: "Speara", class: PlayerClass::Druid, realm: "Kel'Thuzad" },
-        Player { name: "Vinnea", class: PlayerClass::Shaman, realm: "Kel'Thuzad" },
+        //out for season Player { name: "Vinnea", class: PlayerClass::Shaman, realm: "Kel'Thuzad" },
         Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage" },
-        Player { name: "Actuallypete", class: PlayerClass::Warrior, realm: "Zul'jin" },
-        Player { name: "Chewsdayinit", class: PlayerClass::Shaman, realm: "Proudmoore" },
+        Player { name: "Dubshamm", class: PlayerClass::Shaman, realm: "Proudmoore" },
         Player { name: "Chuubers", class: PlayerClass::Warrior, realm: "Stormrage" },
         Player { name: "Crsete", class: PlayerClass::Rogue, realm: "Tichondrius" },
-        Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'jin" },
+        //out for season Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'jin" },
         Player { name: "Filio", class: PlayerClass::Monk, realm: "Stormrage" },
-        Player { name: "Fliptwisty", class: PlayerClass::DemonHunter, realm: "Stormrage" },
         Player { name: "Jakksparrow", class: PlayerClass::Paladin, realm: "Stormrage" },
         Player { name: "Juukmonk", class: PlayerClass::Monk, realm: "Zul'jin" },
         Player { name: "Ppdx", class: PlayerClass::Rogue, realm: "Stormrage" },
-        Player { name: "Quelstyle", class: PlayerClass::Paladin, realm: "Zul'jin" },
-        Player { name: "Stepdoon", class: PlayerClass::Paladin, realm: "Proudmoore" },
-        Player { name: "Volkzero", class: PlayerClass::Shaman, realm: "Emerald Dream" }
-
+        Player { name: "Queldk", class: PlayerClass::DeathKnight, realm: "Zul'jin" },
     ];
 
 
