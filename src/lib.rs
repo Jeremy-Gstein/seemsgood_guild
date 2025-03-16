@@ -19,6 +19,7 @@ fn router() -> Router {
         .route("/application", get(apply_page))
         .route("/dps-sims", get(dps_sims::damagesimspage))
         .route("/keys",  get(mythic_plus::mythicplus_page))
+        .route("/wowaudit", get(wowaudit_page))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -70,4 +71,14 @@ async fn about_page() -> Html<String> {
     Html(rendered)
 }
 
+#[derive(Template)]
+#[template(path = "wowaudit.html")]
+struct WowauditTemplate {
+    show_noti: bool,
+}
 
+async fn wowaudit_page() -> Html<String> {
+    let template = WowauditTemplate { show_noti: true };
+    let rendered = template.render().unwrap();
+    Html(rendered)
+}
