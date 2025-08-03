@@ -11,8 +11,6 @@ use askama_axum::Template;
 mod dps_sims;
 mod mythic_plus;
 
-
-//static _TEMPLATES_DIR: Dir = include_dir!("templates");
 static ASSETS_DIR: Dir = include_dir!("templates");
 
 fn router() -> Router {
@@ -23,7 +21,7 @@ fn router() -> Router {
         .route("/dps-sims", get(dps_sims::damagesimspage))
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
-        .route("/css/carousel.css", get(css_handler))
+        .route("/css/bulma.min.css", get(bulma_css_handler))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -38,9 +36,9 @@ async fn fetch(
 }
 
 
-// Handler for ../templates/css/carousel.css
-async fn css_handler() -> Response {
-    match ASSETS_DIR.get_file("css/carousel.css") {
+// Handler for ../templates/css/bulma.min.css 
+async fn bulma_css_handler() -> Response {
+    match ASSETS_DIR.get_file("css/bulma.min.css") {
         Some(file) => {
             let body = file.contents_utf8().unwrap_or("").to_string();
             (
@@ -50,7 +48,7 @@ async fn css_handler() -> Response {
         }
         None => (
             StatusCode::NOT_FOUND,
-            "CSS file not found".to_string()
+            "Bulma CSS file not found".to_string()
         ).into_response()
     }
 }
@@ -61,7 +59,6 @@ async fn css_handler() -> Response {
 struct IndexTemplate {
     show_noti: bool,
 }
-
 async fn home_page() -> Html<String> {
     let template = IndexTemplate { show_noti: true };
     let rendered = template.render().unwrap();
@@ -73,7 +70,6 @@ async fn home_page() -> Html<String> {
 struct ApplyTemplate {
     show_noti: bool,
 }
-
 async fn apply_page() -> Html<String> {
     let template = ApplyTemplate { show_noti: false };
     let rendered = template.render().unwrap();
@@ -85,7 +81,6 @@ async fn apply_page() -> Html<String> {
 struct AboutTemplate {
     show_noti: bool,
 }
-
 async fn about_page() -> Html<String> {
     let template = AboutTemplate { show_noti: true };
     let rendered = template.render().unwrap();
@@ -97,7 +92,6 @@ async fn about_page() -> Html<String> {
 struct WowauditTemplate {
     show_noti: bool,
 }
-
 async fn wowaudit_page() -> Html<String> {
     let template = WowauditTemplate { show_noti: true };
     let rendered = template.render().unwrap();
