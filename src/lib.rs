@@ -1,4 +1,6 @@
 use axum::{routing::get, Router, response::Redirect};
+use axum::response::{IntoResponse, Response};
+use axum::http::{StatusCode, header};
 use tower_service::Service;
 use worker::*;
 use axum::response::Html;
@@ -10,7 +12,8 @@ mod dps_sims;
 mod mythic_plus;
 
 
-static _TEMPLATES_DIR: Dir = include_dir!("templates");
+//static _TEMPLATES_DIR: Dir = include_dir!("templates");
+static ASSETS_DIR: Dir = include_dir!("templates");
 
 fn router() -> Router {
     Router::new() 
@@ -20,6 +23,7 @@ fn router() -> Router {
         .route("/dps-sims", get(dps_sims::damagesimspage))
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
+        .route("/css/carousel.css", get(css_handler))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -33,17 +37,34 @@ async fn fetch(
     Ok(router().call(req).await?)
 }
 
+
+// Handler for ../templates/css/carousel.css
+async fn css_handler() -> Response {
+    match ASSETS_DIR.get_file("css/carousel.css") {
+        Some(file) => {
+            let body = file.contents_utf8().unwrap_or("").to_string();
+            (
+                [(header::CONTENT_TYPE, "text/css")],
+                body
+            ).into_response()
+        }
+        None => (
+            StatusCode::NOT_FOUND,
+            "CSS file not found".to_string()
+        ).into_response()
+    }
+}
+
+
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
     show_noti: bool,
 }
 
-
 async fn home_page() -> Html<String> {
     let template = IndexTemplate { show_noti: true };
     let rendered = template.render().unwrap();
-    
     Html(rendered)
 }
 
@@ -82,3 +103,4 @@ async fn wowaudit_page() -> Html<String> {
     let rendered = template.render().unwrap();
     Html(rendered)
 }
+
