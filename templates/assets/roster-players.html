@@ -11,8 +11,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 600px;
+  width: 90%;
+  max-width: 600px;
   z-index: 1000;
+  box-sizing: border-box;
 }
 .raid-box {
   width: 110px;
@@ -27,13 +29,25 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: center;
 }
 .raid-box span {
   color: black;
+  word-break: break-word;
 }
 .hidden {
   display: none;
 }
+@media (max-width: 480px) {
+  .raid-box {
+    width: 80px;
+    height: 50px;
+    font-size: 11px;
+  }
+}
+
 </style>
 
 <!-- 20man Raid Roster -->
@@ -43,7 +57,7 @@
   <div class="raid-box" style="background-color: {{ player.class.rgb() }};">
     <img src="{{ player.role.icon_url() }}" alt="{{ player.role }}" style="width: 16px; height: 16px;" />
     <span>{{ player.name }}</span>
-    <span style="font-size: 8px; font-weight: normal;">{{ player.realm }}</span>
+    <span style="font-size: 9px;">{{ player.realm }}</span>
   </div>
   {% endfor %}
 </div>
