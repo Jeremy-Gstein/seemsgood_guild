@@ -10,6 +10,7 @@ use askama_axum::Template;
 // Template logic for Damage Sims Page (dps_sims.rs)
 mod dps_sims;
 mod mythic_plus;
+mod player_metadata;
 
 static ASSETS_DIR: Dir = include_dir!("templates");
 
@@ -53,14 +54,18 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
-
+use player_metadata::{build_roster, Player};
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
     show_noti: bool,
+    players: Vec<Player>,
 }
 async fn home_page() -> Html<String> {
-    let template = IndexTemplate { show_noti: true };
+    let template = IndexTemplate { 
+        show_noti: true, 
+        players: build_roster(), 
+    };
     let rendered = template.render().unwrap();
     Html(rendered)
 }
