@@ -98,28 +98,22 @@ pub struct Player {
 // Roster for specific s2 mythic gallywix kill.
 // in future this will take a .json from wowaudit api to translate roster -> Player struct fields
 pub fn build_roster(id: &str) -> Vec<Player> {
+    // TODO: Throw a error here, we should always show _some_ roster not a fake default user.
     let default = vec![
         Player { name: "DefaultName", class: PlayerClass::Paladin, realm: "DefaultRealm", role: PlayerRole::Tank },
 
     ];
-    /*
-     Tanks:	Crypticist Paliduh
-     DPS:	Rogergrowth Kolzane Hekthuzad Infilicious Filio Quelstyle Emlay Vinneya Ppdx Dubshamm Lanathallan Nyanslok Chuubers
-     Healers:	Notshodo Evelianne Spera Delusionil Piptide 
-    */
 
     let kyvesa = vec![
         // Tanks
         Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'Jin", role: PlayerRole::Tank },
         Player { name: "Paliduh", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Tank },
-
         // Healers
         Player { name: "Notshodo", class: PlayerClass::Evoker, realm: "Stormrage", role: PlayerRole::Healer },
         Player { name: "Evelianne", class: PlayerClass::Monk, realm: "Stormrage", role: PlayerRole::Healer },
         Player { name: "Spera", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Healer },
         Player { name: "Delusionil", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Healer },
         Player { name: "Piptide", class: PlayerClass::Shaman, realm: "Tichondrius", role: PlayerRole::Healer },
-
         // DPS
         Player { name: "Rogergrowth", class: PlayerClass::Druid, realm: "Stormrage", role: PlayerRole::Dps },
         Player { name: "Kolzane", class: PlayerClass::Hunter, realm: "Stormrage", role: PlayerRole::Dps },
@@ -159,16 +153,15 @@ pub fn build_roster(id: &str) -> Vec<Player> {
         Player { name: "Ppdx", class: PlayerClass::Rogue, realm: "Stormrage", role: PlayerRole::Dps },
         Player { name: "Dubshamm", class: PlayerClass::Shaman, realm: "Stormrage", role: PlayerRole::Dps },
         Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage", role: PlayerRole::Dps },
-        Player { name: "Aphitari", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Aphitari", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::Dps },
     ];
+
     let id_str = match id {
         "Gallywix" => gallywix,
         "Kyvesa" => kyvesa,
         _ => default,
     };
     id_str
-    //players
-
 }
 
 
