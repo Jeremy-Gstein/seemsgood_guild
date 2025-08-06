@@ -6,6 +6,7 @@ use worker::*;
 use axum::response::Html;
 use include_dir::{include_dir, Dir};
 use askama_axum::Template;
+use std::collections::HashMap;
 
 // Template logic for Damage Sims Page (dps_sims.rs)
 mod dps_sims;
@@ -59,12 +60,16 @@ use player_metadata::{build_roster, Player};
 #[template(path = "index.html")]
 struct IndexTemplate {
     show_noti: bool,
-    players: Vec<Player>,
+    rosters: HashMap<String, Vec<Player>>, 
 }
 async fn home_page() -> Html<String> {
+    let mut rosters = HashMap::new();
+    rosters.insert("Gallywix".to_string(), build_roster("Gallywix"));
+    rosters.insert("Kyvesa".to_string(), build_roster("Kyvesa"));
+
     let template = IndexTemplate { 
         show_noti: true, 
-        players: build_roster(), 
+        rosters,
     };
     let rendered = template.render().unwrap();
     Html(rendered)

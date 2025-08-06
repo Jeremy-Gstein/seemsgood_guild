@@ -1,0 +1,48 @@
+<!-- Season 1 TWW Card -->
+<div class="card">
+  <div class="card-image">
+    <figure class="image is-16by9 has-ratio">
+      <video class="has-rounded-border" controls muted 
+             preload="metadata" playsinline 
+             poster="https://r2.seemsgood.org/content/media/kyveza-group-pic.png">
+        <source src="https://r2.seemsgood.org/content/media/kyvesa-kill-video.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="content has-text-left">
+      <p class="title is-4"> Mythic Kyvesa Kill </p>
+      <p class="subtitle is-6"> Season 1 of The War Within </p>
+      <time datetime="2024-12-24"> 10:15pm - 12 Dec 2024 </time>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a class="card-footer-item" href="https://www.warcraftlogs.com/reports/Lfx3nrBVRWtNFzMQ?fight=last">
+      <figure class="image is-32x32 mr-2">
+        <img src="https://assets.rpglogs.com/img/warcraft/favicon.png?v=2" alt="Warcraft Logs Logo"/>
+      </figure>
+      View on Warcraft Logs
+    </a>
+    <a class="card-footer-item" onclick="toggleRaidPopup('popup-kyvesa')" style="cursor: pointer;">
+      <figure class="image is-32x32 mr-2">
+        <img src="https://r2.seemsgood.org/content/icons/group-finder.jpg" alt="Group Finder Icon"/>
+      </figure>
+      View Roster
+    </a>
+  </footer>
+
+  <!-- Popups for raid roster -->
+  <div id="popup-kyvesa" class="raid-popup hidden">
+    <button class="delete is-large" onclick="toggleRaidPopup('popup-kyvesa')" 
+            style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: white; cursor: pointer;">
+    </button>
+    {% for player in rosters["Kyvesa"] %}
+    <div class="raid-box" style="background-color: {{ player.class.rgb() }};">
+      <img src="{{ player.role.icon_url() }}" alt="{{ player.role }}" style="width: 16px; height: 16px;" />
+      <span>{{ player.name }}</span>
+      <span style="font-size: 9px;">{{ player.realm }}</span>
+    </div>
+    {% endfor %}
+  </div>
+ </div>
