@@ -9,7 +9,7 @@ use askama_axum::Template;
 use std::collections::HashMap;
 
 // Template logic for Damage Sims Page (dps_sims.rs)
-mod dps_sims;
+mod dps_sims; 
 mod mythic_plus;
 mod player_metadata;
 
@@ -55,20 +55,24 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
-use player_metadata::{build_roster, Player};
+use player_metadata::{build_roster, Player, build_raid, RaidMetaData};
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
     show_noti: bool,
+    raid_metadata: Vec<RaidMetaData>,
     rosters: HashMap<String, Vec<Player>>, 
 }
 async fn home_page() -> Html<String> {
     let mut rosters = HashMap::new();
     rosters.insert("Gallywix".to_string(), build_roster("Gallywix"));
     rosters.insert("Kyvesa".to_string(), build_roster("Kyvesa"));
+    rosters.insert("Fyrakk".to_string(), build_roster("Fyrakk"));
 
+    let raid_metadata = build_raid();
     let template = IndexTemplate { 
         show_noti: true, 
+        raid_metadata,
         rosters,
     };
     let rendered = template.render().unwrap();

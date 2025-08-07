@@ -5,6 +5,7 @@ pub enum PlayerRole {
     Dps,
 }
 
+// map a PlayerRole to a known icon url.
 impl PlayerRole {
     pub fn icon_url(&self) -> &'static str {
         match self {
@@ -15,6 +16,8 @@ impl PlayerRole {
     }
 }
 
+// map a PlayerRole to its string value so 'player.role.tank' would format to 'tank' string.
+// if a icon url cant resolve or render on a device, it will default to 
 impl std::fmt::Display for PlayerRole {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let role_str = match self {
@@ -25,8 +28,6 @@ impl std::fmt::Display for PlayerRole {
         write!(f, "{}", role_str)
     }
 }
-
-
 
 #[derive(Debug)]
 pub enum PlayerClass {
@@ -95,7 +96,58 @@ pub struct Player {
 }
 
 
-// Roster for specific s2 mythic gallywix kill.
+#[derive(Debug)]
+pub struct RaidMetaData {
+   pub fight_name: &'static str,
+   pub season: &'static str,
+   pub expansion: &'static str,
+   pub group_photo: &'static str,
+   pub log_id: &'static str,
+   pub datetime: &'static str,
+   pub pretty_datetime: &'static str,
+   pub fight_key: &'static str,
+}
+
+pub fn build_raid() -> Vec<RaidMetaData> {
+    let raid_metadata = vec![
+        RaidMetaData {
+            fight_name: "Gallywix",
+            season: "Season 2",
+            expansion: "The War Within",
+            group_photo: "gallywix-kill-group.png",
+            log_id: "FBvTzZPLVmdApbN6",
+            datetime: "2025-06-26",
+            pretty_datetime: "9:13pm - 26 June 2025",
+            fight_key: "Gallywix",
+        },
+        RaidMetaData {
+            fight_name: "Kyvesa",
+            season: "Season 1",
+            expansion: "The War Within",
+            group_photo: "kyvesa-kill-group.png",
+            log_id: "Lfx3nrBVRWtNFzMQ",
+            datetime: "2024-12-12",
+            pretty_datetime: "10:15pm - 12 December 2024",
+            fight_key: "Kyvesa",
+        },
+        RaidMetaData {
+            fight_name: "Fyrakk",
+            season: "Season 4",
+            expansion: "Dragonflight",
+            group_photo: "fyrakk-group-pic.jpg",
+            log_id: "F8fxkdGnVQmRNCJrv",
+            datetime: "2024-07-01",
+            pretty_datetime: "10:03pm - 1 July 2024",
+            fight_key: "Fyrakk",
+        },
+
+    ];
+    raid_metadata
+
+
+}
+
+// Rosters are populated here. We could read a DB or config file of { $SEASON, { $Player, { $name, $class, $realm, $role }}}
 // in future this will take a .json from wowaudit api to translate roster -> Player struct fields
 pub fn build_roster(id: &str) -> Vec<Player> {
     // TODO: Throw a error here, we should always show _some_ roster not a fake default user.
@@ -104,9 +156,39 @@ pub fn build_roster(id: &str) -> Vec<Player> {
 
     ];
 
+    // ----[ Season 4 DF Card ]----
+    let fyrakk = vec![
+        // Tanks
+        Player { name: "Jugsmcgee", class: PlayerClass::DeathKnight, realm: "Stormrage", role: PlayerRole::Tank },
+        Player { name: "Rogermeta", class: PlayerClass::DemonHunter, realm: "Stormrage", role: PlayerRole::Tank },
+
+        // Healers
+        Player { name: "Evelianne", class: PlayerClass::Monk, realm: "Stormrage", role: PlayerRole::Healer },
+        Player { name: "Shdo", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Healer },
+        Player { name: "Delusionol", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Healer },
+        Player { name: "Sylvána", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Healer },
+
+        // DPS
+        Player { name: "Tusknight", class: PlayerClass::DeathKnight, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Amarelysa", class: PlayerClass::DemonHunter, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Fliptwisty", class: PlayerClass::DemonHunter, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Nuzzler", class: PlayerClass::Druid, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Nyansev", class: PlayerClass::Evoker, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Jennatullz", class: PlayerClass::Hunter, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Kaelirious", class: PlayerClass::Hunter, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Infilicious", class: PlayerClass::Mage, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Jakksparrow", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Paliduh", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Wallysaurous", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Nicechint", class: PlayerClass::Rogue, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Lanathallan", class: PlayerClass::Warlock, realm: "Stormrage", role: PlayerRole::DPS },
+        Player { name: "Contradict", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::DPS },
+        ];
+    
+    // ----[ Season 1 TWW Card ]----
     let kyvesa = vec![
         // Tanks
-        Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'Jin", role: PlayerRole::Tank },
+        Player { name: "Crypticist", class: PlayerClass::DeathKnight, realm: "Zul'jin", role: PlayerRole::Tank },
         Player { name: "Paliduh", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Tank },
         // Healers
         Player { name: "Notshodo", class: PlayerClass::Evoker, realm: "Stormrage", role: PlayerRole::Healer },
@@ -130,6 +212,7 @@ pub fn build_roster(id: &str) -> Vec<Player> {
         Player { name: "Chuubers", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::Dps },
     ];
 
+    // ----[ Season 2 TWW Card ]----
     let gallywix = vec![
         // Tanks
         Player { name: "Whare", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Tank },
@@ -155,10 +238,12 @@ pub fn build_roster(id: &str) -> Vec<Player> {
         Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage", role: PlayerRole::Dps },
         Player { name: "Aphitari", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::Dps },
     ];
-
+    
+     
     let id_str = match id {
         "Gallywix" => gallywix,
         "Kyvesa" => kyvesa,
+        "Fyrakk" => fyrakk,
         _ => default,
     };
     id_str
