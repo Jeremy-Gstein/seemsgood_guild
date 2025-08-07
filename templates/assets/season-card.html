@@ -45,9 +45,11 @@
     </button>
     {% for player in rosters[card.fight_key] %}
     <div class="raid-box" style="background-color: {{ player.class.rgb() }};">
-      <img src="{{ player.role.icon_url() }}" alt="{{ player.role }}" style="width: 16px; height: 16px;" />
-      <span>{{ player.name }}</span>
-      <span style="font-size: 9px;">{{ player.realm }}</span>
+      <a href="https://worldofwarcraft.blizzard.com/en-us/character/us/{{ player.realm }}/{{ player.name }}">
+        <img src="{{ player.role.icon_url() }}" alt="{{ player.role }}" style="width: 16px; height: 16px;" />
+        <span>{{ player.name }}</span>
+        <span style="font-size: 9px;">{{ player.realm }}</span>
+      </a>
     </div>
     {% endfor %}
   </div>
