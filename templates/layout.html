@@ -107,7 +107,7 @@
 
   </head>
 <!-- start of navbar -->
-<nav class="navbar is-spaced has-shadow is-dark" role="navigation" aria-label="main navigation">
+<nav class="navbar has-shadow is-dark is-flex is-justify-content-space-between" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <figure class="image is-64x64 is-justify-content-center">
       <img src="https://r2.seemsgood.org/content/media/guild-logo-removebg.png" />
@@ -140,13 +140,18 @@
           <strong>Tools</strong>
         </a>
         <div class="navbar-dropdown">
-          <a class="navbar-item" href="/keys">
-            <strong class="has-text-link">Mythic+</strong>
+          <div class="navbar-item">
+            <a class="button is-primary" href="/keys">
+            <strong>Mythic+</strong>
           </a>
-          <a class="navbar-item" href="/wowaudit">
-            <strong class="has-text-link">Wowaudit Spreadsheet</strong>
+          </div>
+          <div class="navbar-item">
+            <a class="button is-primary" href="/wowaudit">
+            <strong>Wowaudit Spreadsheet</strong>
           </a>
-          <a class="navbar-item" href="/dps-sims">
+          </div>
+          <div class="navbar-item"> 
+            <a class="button is-primary" href="/dps-sims">
             <div class="icon-text">
               <span class="icon has-text-warning">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -155,7 +160,8 @@
                 <strong class="has-text-warning">DPS Sims</strong>
               </span>
             </div>
-          </a>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -198,7 +204,7 @@
     </main>
   </body>
   <!--Start of Footer -->
-  <footer class="footer">
+  <footer class="footer" style="flex-shrink: 0; padding: 1.5rem 1rem; text-align: center;">
     <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
       <ul>
         <li><a href="/">Home</a></li>
