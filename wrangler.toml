@@ -14,3 +14,4 @@ invocation_logs = true
 binding = "R2_CONTENT"
 bucket_name = "sg-cfr2"
 preview_bucket_name = "sg-cfr2"
+experimental_remote = true
