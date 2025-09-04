@@ -58,23 +58,6 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
-
-async fn events_handler() -> Response {
-    let file = match ASSETS_DIR.get_file("assets/events.json") {
-        Some(f) => f,
-        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
-    };
-
-    let body = file.contents_utf8().unwrap_or("").to_string();
-
-    (
-        [(header::CONTENT_TYPE, "application/json")],
-        body
-    ).into_response()
-}
-
-
-
 // Handler for ../templates/assets/events.json
 // the file exists on the r2 share but issues with CORS and axum/worker preventing a dynamic
 // solution. In the future, we would ideally get new data on page reload.
@@ -83,22 +66,19 @@ async fn events_handler() -> Response {
 // one possible way to make the data 'appear' new would be pushing events.json to the github
 // repo on a timer. this would trigger a automatic build for the cloudflare worker instance.
 // makeing the site 'appear' updated.
-// async fn events_handler() -> Response {
-//     match ASSETS_DIR.get_file("assets/events.json") {
-//         Some(file) => {
-//             let body = file.contents_utf8().unwrap_or("").to_string();
-//             (
-//                 [(header::CONTENT_TYPE, "application/json")],
-//                 body
-//             ).into_response()
-//         }
-//         None => (
-//             StatusCode::NOT_FOUND,
-//             "JSON file not found".to_string()
-//         ).into_response()
-//     }
-// }
-//
+async fn events_handler() -> Response {
+    let file = match ASSETS_DIR.get_file("assets/events.json") {
+        Some(f) => f,
+        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
+    };
+
+    let body = file.contents_utf8().unwrap_or("").to_string();
+    (
+        [(header::CONTENT_TYPE, "application/json")],
+        body
+    ).into_response()
+}
+
 // Home Page
 use player_metadata::{build_roster, Player, build_raid, RaidMetaData};
 #[derive(Template)]
