@@ -8,12 +8,14 @@ use include_dir::{include_dir, Dir};
 use askama_axum::Template;
 use std::collections::HashMap;
 
-// Template logic for Damage Sims Page (dps_sims.rs)
+// Template logic 
 mod dps_sims; 
 mod mythic_plus;
 mod player_metadata;
 
 static ASSETS_DIR: Dir = include_dir!("templates");
+//const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
+
 
 fn router() -> Router {
     Router::new() 
@@ -24,6 +26,7 @@ fn router() -> Router {
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
         .route("/css/bulma.min.css", get(bulma_css_handler))
+        .route("/events", get(events_handler))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -55,6 +58,48 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
+
+async fn events_handler() -> Response {
+    let file = match ASSETS_DIR.get_file("assets/events.json") {
+        Some(f) => f,
+        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
+    };
+
+    let body = file.contents_utf8().unwrap_or("").to_string();
+
+    (
+        [(header::CONTENT_TYPE, "application/json")],
+        body
+    ).into_response()
+}
+
+
+
+// Handler for ../templates/assets/events.json
+// the file exists on the r2 share but issues with CORS and axum/worker preventing a dynamic
+// solution. In the future, we would ideally get new data on page reload.
+// currently events.json will only updates on rebuilds.
+//
+// one possible way to make the data 'appear' new would be pushing events.json to the github
+// repo on a timer. this would trigger a automatic build for the cloudflare worker instance.
+// makeing the site 'appear' updated.
+// async fn events_handler() -> Response {
+//     match ASSETS_DIR.get_file("assets/events.json") {
+//         Some(file) => {
+//             let body = file.contents_utf8().unwrap_or("").to_string();
+//             (
+//                 [(header::CONTENT_TYPE, "application/json")],
+//                 body
+//             ).into_response()
+//         }
+//         None => (
+//             StatusCode::NOT_FOUND,
+//             "JSON file not found".to_string()
+//         ).into_response()
+//     }
+// }
+//
+// Home Page
 use player_metadata::{build_roster, Player, build_raid, RaidMetaData};
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -79,6 +124,7 @@ async fn home_page() -> Html<String> {
     Html(rendered)
 }
 
+// Apply Page 
 #[derive(Template)]
 #[template(path = "apply.html")]
 struct ApplyTemplate {
@@ -90,6 +136,7 @@ async fn apply_page() -> Html<String> {
     Html(rendered)
 }
 
+// About Page
 #[derive(Template)]
 #[template(path = "about.html")]
 struct AboutTemplate {
@@ -101,6 +148,7 @@ async fn about_page() -> Html<String> {
     Html(rendered)
 }
 
+// Spreadsheet Page (wowaudit)
 #[derive(Template)]
 #[template(path = "wowaudit.html")]
 struct WowauditTemplate {

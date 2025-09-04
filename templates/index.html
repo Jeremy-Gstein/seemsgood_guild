@@ -1,13 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- js and css for 'raid-frames' popup -->
+<!-- js and css for 'raid-frames/scrolling-events' popup -->
 {% include "assets/roster-players.html" %}
 
-<!-- Warcraft Logs Progress Tracker -->
+<!-- Current Season Events/Progress Tracker -->
 <div class="container has-text-centered">
   <div class="box">
     {% include "assets/wcl-progress-card.html" %}
+    <!-- 'scrolling-events' marquee animation --> 
+    <div class="card-content">
+      {% include "assets/scrolling-events.html" %}
+      <div class="container has-text-centered">
+        <div class="scroll-container">
+          <div class="scroll-content" id="scrollContent"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
