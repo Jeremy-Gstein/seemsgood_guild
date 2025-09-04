@@ -5,7 +5,7 @@ ASSET_PATH="/tmp/seemsgood_guild/templates/assets/"
 GIT_REPO="https://github.com/Jeremy-Gstein/seemsgood_guild"
 REPO_NAME="seemsgood_guild"
 
-git remote set-url origin git@github.com:Jeremy-Gstein/seemsgood_guild
+# git remote set-url origin git@github.com:Jeremy-Gstein/seemsgood_guild
 # Get the latest events.json from wowaudit and save to templates/assets/events.json
 get_events() {
   curl -X 'GET' \
