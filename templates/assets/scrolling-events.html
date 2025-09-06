@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;      /* vertically center icon + text */
   /*font-size: 0.9rem;         match Bulma body size */
-  line-height: 1.4;
+  /*line-height: 1.4; */
   white-space: nowrap;      /* keep all on one line */
 }
 
@@ -52,9 +52,9 @@
         542: { name: "Eco-Dome Al'dani", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/inv_112_achievement_dungeon_ecodome.jpg" },
         378: { name: "Halls of Atonement", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/achievement_dungeon_hallsofattonement.jpg" },
         525: { name: "Operation: Floodgate", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/inv_achievement_dungeon_waterworks.jpg" },
-        499: { name: "Priory of the Sacred Flame", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/inv_achievement_dungeon_prioryofthesacredflame.jpg" },
-        392: { name: "Tazavesh: So'leah's Gambit", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/achievement_dungeon_theotherside_dealergexa.jpg" },
-        391: { name: "Tazavesh: Streets of Wonder", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/achievement_dungeon_brokerdungeon.jpg" },
+        499: { name: "Priory of Sacred Flame", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/inv_achievement_dungeon_prioryofthesacredflame.jpg" },
+        392: { name: "Tazavesh: Gambit", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/achievement_dungeon_theotherside_dealergexa.jpg" },
+        391: { name: "Tazavesh: Streets", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/achievement_dungeon_brokerdungeon.jpg" },
         505: { name: "The Dawnbreaker", icon_url: "https://cdn.raiderio.net/images/wow/icons/large/inv_achievement_dungeon_dawnbreaker.jpg" }
       };
       
@@ -65,15 +65,16 @@
         purple: "#a335ee",
         orange: "#ff8000",   
         white: "#ffffff",  
-        gray: "#9d9d9d"
+        gray: "#9d9d9d",
+        yellow: "#e6cc80"
       };
 
       function getKeyColor(level) {
-        if (level <= 8) return keyColors.blue;
-        if (level <= 10) return keyColors.blue;
-        if (level <= 12) return keyColors.purple;
-        if (level <= 15) return keyColors.orange;
-        return keyColors.gray; 
+        if (level <= 8) return keyColors.green; // +2-+8 are green
+        if (level <= 11) return keyColors.blue; // +9-+11 are blue
+        if (level <= 14) return keyColors.purple; // +12-+14 are purple
+        if (level <= 15) return keyColors.orange; // +15-+20 are orange
+        return keyColors.gray;  // default gray. we shouldnt hit this but if we get >1 or <20 this will throw.
       }
 
       const lines = [];
@@ -100,7 +101,7 @@
             // Apply key level color
             const textSpan = document.createElement("span");
             textSpan.style.color = getKeyColor(dungeon.level);
-            textSpan.textContent = `${char.name} (${char.realm}) +${dungeon.level} ${dungeonName}`;
+            textSpan.textContent = `${char.name} +${dungeon.level} ${dungeonName}`;
 
             lineDiv.appendChild(textSpan);
             lines.push(lineDiv);
