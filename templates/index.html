@@ -4,29 +4,26 @@
 <!-- js and css for 'raid-frames/scrolling-events' popup -->
 {% include "assets/roster-players.html" %}
 
-<!-- Current Season Events/Progress Tracker -->
-<div class="container has-text-centered">
-  <div class="box">
+<!-- Box Wrapper -->
+<div class="box">
+ <!-- Current Season Events/Progress Tracker -->
+  <div class="container has-text-centered">
     {% include "assets/wcl-progress-card.html" %}
     <!-- 'scrolling-events' marquee animation --> 
-    <div class="card-content">
-      {% include "assets/scrolling-events.html" %}
-      <div class="container has-text-centered">
-        <div class="scroll-container">
-          <div class="scroll-content" id="scrollContent"></div>
-        </div>
-      </div>
+    {% include "assets/scrolling-events.html" %}
+    <div class="scroll-container">
+      <div class="scroll-content" id="scrollContent"></div>
     </div>
   </div>
-</div>
 
-<!--  Season 4 DF, Season 1, 2 TWW Post -->
-<div class="container has-text-centered">
-  <div class="box">
+  <!--  Season Raid Progress Card -->
+  <div class="container has-text-centered">
     {% for card in raid_metadata %}
     {% include "assets/season-card.html" %}
     {% endfor %}
   </div>
+
+<!-- Close Content Box -->
 </div>
 
 {% endblock %}
