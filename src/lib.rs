@@ -58,6 +58,7 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
+
 // Handler for ../templates/assets/events.json
 // the file exists on the r2 share but issues with CORS and axum/worker preventing a dynamic
 // solution. In the future, we would ideally get new data on page reload.
