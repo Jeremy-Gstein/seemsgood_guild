@@ -94,22 +94,41 @@
     </script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        const $navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
+        const burgers = document.querySelectorAll('.navbar-burger');
+        const menus = document.querySelectorAll('.navbar-menu');
+        const overlay = document.getElementById('navbarOverlay');
+        const tools = document.getElementById('dropdown-menu');
 
-        $navbarBurgers.forEach(burger => {
+
+        burgers.forEach(burger => {
           burger.addEventListener('click', () => {
             const targetId = burger.dataset.target;
-            const $target = document.getElementById(targetId);
-
-            // Toggle burger and main menu
+            const target = document.getElementById(targetId);
             burger.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
+            target.classList.toggle('is-active');
+            overlay.classList.toggle('is-active');
 
-            // Ensure Tools dropdown is always open on mobile
-            const toolsDropdown = $target.querySelector('.navbar-item.has-dropdown');
-            if (toolsDropdown) {
-              toolsDropdown.classList.add('is-active'); // always show
-            }
+
+          });
+        });
+
+        // Close when clicking overlay
+        overlay.addEventListener('click', () => {
+          burgers.forEach(burger => burger.classList.remove('is-active'));
+          menus.forEach(menu => menu.classList.remove('is-active'));
+          overlay.classList.remove('is-active');
+
+        });
+
+        // Toggle dropdowns on mobile tap
+        const dropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
+        dropdowns.forEach(dd => {
+          const link = dd.querySelector('.navbar-link');
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            tools.classList.remove('is-hoverable');
+            dd.classList.toggle('is-active');
+
           });
         });
       });
@@ -144,7 +163,7 @@
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
-      transition: opacity 420ms ease, transform 420ms ease;
+      transition: opacity 400ms ease, transform 400ms ease;
       pointer-events: auto;
       transition-delay: 0s;
     }
@@ -185,19 +204,60 @@
 
     /* === Mobile Adjustments === */
     @media (max-width: 768px) {
-      .navbar-item.has-dropdown .navbar-dropdown {
-        position: relative !important; /* dropdown flows naturally in mobile menu */
-        left: 0 !important;
-        top: 0 !important;
-        min-width: 100% !important;
-        max-height: 60vh;      /* don't overflow viewport */
-        overflow-y: auto;      /* scroll if too tall */
-        padding: 0.5rem 0 !important;
+      .navbar-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem 1rem;
+        transform: translateX(-100%);
+        transition: transform 0.8s ease;
+        z-index: 1100; /* above overlay */
       }
 
-      /* Ensure dropdown items have good touch spacing */
-      .navbar-item.has-dropdown .navbar-dropdown .navbar-item {
-        padding: 0.5rem 1rem !important;
+      .navbar-menu.is-active {
+        transform: translateX(0);
+      }
+
+      /* Overlay behind menu */
+      .navbar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+
+        pointer-events: none;
+      }
+
+      .navbar-overlay.is-active {
+        display: flex;
+        pointer-events: auto;
+        margin-left: 75%;
+      }
+
+      /* Sidebar item styles */
+      .navbar-item,
+      .navbar-item .button {
+        width: 100%;
+        margin: 0.5rem 0;
+        text-align: left;
+      }
+
+      /* Dropdown inside sidebar */
+      .navbar-item.has-dropdown .navbar-dropdown {
+        position: relative !important;
+        background: none !important;
+        box-shadow: none !important;
+        padding-left: 1rem;
       }
     }
     </style>
@@ -232,7 +292,7 @@
       </div>
 
       <!-- Dropdown Menu -->
-      <div class="navbar-item has-dropdown is-hoverable">
+      <div class="navbar-item has-dropdown is-hoverable" id="dropdown-menu">
         <a class="navbar-link">
           <span class="button is-primary">
             <strong>Tools</strong>
@@ -287,6 +347,9 @@
   </div>
 </nav>
 
+<!-- Overlay -->
+<div class="navbar-overlay" id="navbarOverlay"></div>
+
 <body>
     <main> 
       <section>
@@ -325,19 +388,29 @@
     </nav>
     <div class="content has-text-centered">
       <p>
-        <strong>SeemsGood.org</strong> by 
-        <a href="https://j51b5.com">Jeremy (Shodo)</a>.
-        Hosted with <a href="https://radar.cloudflare.com/domains/domain/seemsgood.org"><i class="fa fa-brands fa-cloudflare"></i> Cloudflare Workers</a>.</br>
+        <strong>Seems Good</strong>
+        Website Design Developed by 
+        <a href="https://j51b5.com">Jeremy <small>(Shodo)</small></a> 
+        - Hosted with
+        <a href="https://radar.cloudflare.com/domains/domain/seemsgood.org">
+          <i class="fa fa-brands fa-cloudflare"></i>
+          Cloudflare Workers
+        </a>
+      </p>
+      <p class="is-size-7">
         The source code is licensed under
         <a href="https://opensource.org/license/mit" rel="license">MIT</a>.
         Unless otherwise noted, website content © 2024-2025
-        <a href="https://seemsgood.org">seemsgood.org</a> is licensed under
+        <a href="https://seemsgood.org">seemsgood.org</a> 
+        is licensed under
         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">
-          CC BY NC SA 4.0</a>.
+          CC BY NC SA 4.0
+        </a>.
       </p>
       <p class="is-size-7">
         World of Warcraft, is a trademark of 
-        <a href="https://www.blizzard.com/legal/b04001c4-dc81-480d-a475-5e276e241e4f/">Blizzard Entertainment, Inc</a>. 
+        <a href="https://www.blizzard.com/legal/b04001c4-dc81-480d-a475-5e276e241e4f/">
+          Blizzard Entertainment, Inc</a>. 
         All other content and trademarks are property of their respective owners.
       </p>
     </div>
