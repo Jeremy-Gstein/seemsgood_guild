@@ -12,6 +12,7 @@ use std::collections::HashMap;
 mod dps_sims; 
 mod mythic_plus;
 mod player_metadata;
+mod about_data;
 
 static ASSETS_DIR: Dir = include_dir!("templates");
 //const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
@@ -118,13 +119,20 @@ async fn apply_page() -> Html<String> {
 }
 
 // About Page
+use about_data::{ContactInfo, build_contacts};
 #[derive(Template)]
 #[template(path = "about.html")]
 struct AboutTemplate {
     show_noti: bool,
+    contacts: Vec<ContactInfo>,
 }
 async fn about_page() -> Html<String> {
-    let template = AboutTemplate { show_noti: true };
+
+    let contacts = build_contacts();
+    let template = AboutTemplate { 
+        show_noti: true,
+        contacts,
+    };
     let rendered = template.render().unwrap();
     Html(rendered)
 }

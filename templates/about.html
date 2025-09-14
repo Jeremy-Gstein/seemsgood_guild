@@ -44,57 +44,14 @@
     <!-- Contact Box -->
     <div class="box">
       <h3 class="title is-3">Contacts</h3>
-      <p class="subtitle has-text-left"> <span class="has-text-weight-bold"> 
-        GMs: </span></p>
-
-      <div class="tags has-addons">
-          <span class="tag is-large is-dark">Dub</span>
-          <span class="tag is-link is-large">
-            <i class="fa-brands fa-discord"></i></span>
-          <span class="tag is-link is-large is-hoverable">
-            .whitechoc
-          </span>
-        </div>
-
-        <div class="tags has-addons">
-          <span class="tag is-large is-dark">Ladora</span>
-          <span class="tag is-link is-large">
-            <i class="fa-brands fa-discord"></i></span>
-          <span class="tag is-link is-large is-hoverable">
-            ladora 
-          </span>
-        </div>
-
-      <p class="subtitle has-text-left"> <span class="has-text-weight-bold">
-        Officers: </span>
+      <p class="subtitle has-text-left"> 
+      <span class="has-text-weight-bold"> 
+        GM/Officer:
+      </span>
       </p>
-      <div class="tags has-addons">
-        <span class="tag is-large is-dark">Delulu</span>
-        <span class="tag is-link is-large">
-          <i class="fa-brands fa-discord"></i></span>
-        <span class="tag is-link is-large is-hoverable">
-          delusionol 
-        </span>
-      </div>
-
-      <div class="tags has-addons">
-        <span class="tag is-large is-dark">Infi</span>
-        <span class="tag is-link is-large">
-          <i class="fa-brands fa-discord"></i></span>
-        <span class="tag is-link is-large is-hoverable">
-          windfi 
-        </span>
-      </div>
-
-      <div class="tags has-addons">
-        <span class="tag is-large is-dark">Kolzane</span>
-        <span class="tag is-link is-large">
-          <i class="fa-brands fa-discord"></i></span>
-        <span class="tag is-link is-large is-hoverable">
-          oogamama
-        </span>
-      </div>
-
+          {% for contact in contacts %}
+          {% include "assets/contact-card.html" %}
+          {% endfor %}
     </div>
 
     <!-- Are You A Good Fit Box -->
