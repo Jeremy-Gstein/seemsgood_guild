@@ -18,7 +18,7 @@ pub fn build_contacts() -> Vec<ContactInfo> {
             is_gm: true,
             name: "Dub",
             discord: ".whitechoc",
-            battlenet: "whitechoc#1172",
+            battlenet: "WhiteChoc#1172",
             discord_icon: discord_icon,
             battlenet_icon:  battlenet_icon       
         },
@@ -35,7 +35,7 @@ pub fn build_contacts() -> Vec<ContactInfo> {
             is_gm: false,
             name: "Delusionol",
             discord: "delusionol",
-            battlenet: "Dombrefiel#1438",
+            battlenet: "Delusionol#1509",
             discord_icon: discord_icon,
             battlenet_icon:  battlenet_icon       
         },
@@ -44,7 +44,7 @@ pub fn build_contacts() -> Vec<ContactInfo> {
             is_gm: false,
             name: "Kolzane",
             discord: "oogamama",
-            battlenet: "oogamama#1843",
+            battlenet: "Oogamama#1843",
             discord_icon: discord_icon,
             battlenet_icon:  battlenet_icon       
         },
