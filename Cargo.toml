@@ -20,7 +20,7 @@ codegen-units = 1
 crate-type = ["cdylib"]
 
 [dependencies]
-worker = { version="0.2.0", features=['http', 'axum'] }
+worker = { version="0.7.0", features=['http', 'axum'] }
 worker-macros = { version="0.2.0", features=['http'] }
 axum  = { version = "0.7", default-features = false }
 tower-service = "0.3.2"
