@@ -2,7 +2,7 @@
   <!-- <div class="card-image"> -->
   <!--   <figure class="image"> -->
   <!--     <img -->
-  <!--         src="https://r2.seemsgood.org/content/mythic-progress.png" -->
+  <!--         src="https://r2.seemsgood.org/content/s.png" -->
   <!--         alt="Image of WarcraftLogs Mythic Progress Tracking Widget"/> -->
   <!--   </figure> -->
   <!-- </div> -->
@@ -10,6 +10,26 @@
     <div class="content has-text-left">
       <p class="title is-4"> Manaforge Omega </p>
       <p class="subtitle is-6"> Season 3 of The War Within </p>
+      <div class="media">
+        <div class="media-left">
+          <figure class="image is-48x48">
+            <img id="bossIcon" src="" alt="Boss Icon">
+          </figure>
+        </div>
+        <div class="media-content">
+          <p class="title is-6" id="bossName">Dimensius, the All-Devouring</p>
+          <div class="level is-mobile">
+            <div class="level-left">
+              <div class="level-item">
+                <strong>Pulls:</strong> <span id="pullCount">368</span>
+              </div>
+              <div class="level-item">
+                <strong>Best:</strong> <span id="bestPercent">19.2% P3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <footer class="card-footer">
@@ -33,3 +53,26 @@
     </div>
   </div>
 
+
+<script>
+async function loadBossData() {
+  try {
+    const response = await fetch("/progress"); 
+    if (!response.ok) throw new Error("Network response was not ok");
+
+    const bossData = await response.json();
+
+    // Populate widget
+    document.getElementById('bossIcon').src = bossData.iconImageUrl;
+    document.getElementById('bossName').textContent = bossData.name;
+    document.getElementById('pullCount').textContent = bossData.pullCount;
+    document.getElementById('bestPercent').textContent = bossData.bestPercentForDisplay;
+
+  } catch (err) {
+    console.error("Failed to load boss data:", err);
+  }
+}
+
+// Load on page load
+loadBossData();
+</script>

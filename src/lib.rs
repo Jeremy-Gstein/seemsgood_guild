@@ -28,6 +28,7 @@ fn router() -> Router {
         .route("/wowaudit", get(wowaudit_page))
         .route("/css/bulma.min.css", get(bulma_css_handler))
         .route("/events", get(events_handler))
+        .route("/progress", get(progress_handler))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -80,6 +81,23 @@ async fn events_handler() -> Response {
         body
     ).into_response()
 }
+
+// Handler for ../templates/assets/events.json
+// same logic as events_handler()
+async fn progress_handler() -> Response {
+    let file = match ASSETS_DIR.get_file("assets/progress.json") {
+        Some(f) => f,
+        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
+    };
+
+    let body = file.contents_utf8().unwrap_or("").to_string();
+    (
+        [(header::CONTENT_TYPE, "application/json")],
+        body
+    ).into_response()
+}
+
+
 
 // Home Page
 use player_metadata::{build_roster, Player, build_raid, RaidMetaData};

@@ -1,0 +1,16 @@
+{
+  "id": 3135,
+  "name": "Dimensius, the All-Devouring",
+  "shortName": "Dimensius",
+  "backgroundImageUrl": "https://assets.rpglogs.com/img/warcraft/bosses/3135-with-background.jpg",
+  "backgroundImageFallbackUrl": "https://assets.rpglogs.com/img/warcraft/bosses/3135-with-background.jpg",
+  "iconImageUrl": "https://assets.rpglogs.com/img/warcraft/bosses/3135-icon.jpg?v=2",
+  "transparentImageUrl": "https://assets.rpglogs.com/img/warcraft/bosses/3135-with-transparent-background.png?v=2",
+  "isKilled": false,
+  "killedAtTimestamp": null,
+  "youtubeEmbedUrl": null,
+  "showStats": true,
+  "bestPercent": 8.64,
+  "bestPercentForDisplay": "19.2% P3",
+  "pullCount": 368
+}
