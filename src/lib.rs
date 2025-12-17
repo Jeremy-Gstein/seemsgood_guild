@@ -1,5 +1,5 @@
 use axum::{routing::get, Router, response::Redirect};
-use axum::response::{IntoResponse, Response};
+use axum::response::IntoResponse;
 use axum::http::{StatusCode, header};
 use tower_service::Service;
 use worker::*;
@@ -14,10 +14,14 @@ mod mythic_plus;
 mod player_metadata;
 mod about_data;
 
+// Include html, css, and and media in local repo.
 static ASSETS_DIR: Dir = include_dir!("templates");
-//const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
 
+// R2 Endpoints for dynamic content
+const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
+const PROGRESS_JSON_URL: &str = "https://r2.seemsgood.org/content/progress.json";
 
+// All routes for webpage that are not dynamic.
 fn router() -> Router {
     Router::new() 
         .route("/", get(home_page))
@@ -27,8 +31,6 @@ fn router() -> Router {
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
         .route("/css/bulma.min.css", get(bulma_css_handler))
-        .route("/events", get(events_handler))
-        .route("/progress", get(progress_handler))
         .fallback(Redirect::permanent("/"))
 }
 
@@ -39,12 +41,23 @@ async fn fetch(
     _ctx: Context,
 ) -> Result<axum::http::Response<axum::body::Body>> {
     console_error_panic_hook::set_once();
+    
+    // Handle /events and /progress routes manually before passing to router
+    let path = req.uri().path();
+   
+    if path == "/progress" {
+        console_log!("/progress route echo");
+        return Ok(fetch_json_endpoint(PROGRESS_JSON_URL, "assets/progress.json").await);
+    }
+    if path == "/events" {
+        return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/progress.json").await);
+    }
+    // For all other routes, use the router
     Ok(router().call(req).await?)
 }
 
-
 // Handler for ../templates/css/bulma.min.css 
-async fn bulma_css_handler() -> Response {
+async fn bulma_css_handler() -> axum::http::Response<axum::body::Body> {
     match ASSETS_DIR.get_file("css/bulma.min.css") {
         Some(file) => {
             let body = file.contents_utf8().unwrap_or("").to_string();
@@ -60,43 +73,66 @@ async fn bulma_css_handler() -> Response {
     }
 }
 
-
-// Handler for ../templates/assets/events.json
-// the file exists on the r2 share but issues with CORS and axum/worker preventing a dynamic
-// solution. In the future, we would ideally get new data on page reload.
-// currently events.json will only updates on rebuilds.
-//
-// one possible way to make the data 'appear' new would be pushing events.json to the github
-// repo on a timer. this would trigger a automatic build for the cloudflare worker instance.
-// makeing the site 'appear' updated.
-async fn events_handler() -> Response {
-    let file = match ASSETS_DIR.get_file("assets/events.json") {
-        Some(f) => f,
-        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
+// Generic to fetch JSON from endpoint with fallback
+async fn fetch_json_endpoint(url: &str, fallback_path: &str) -> axum::http::Response<axum::body::Body> {
+    // Try to fetch from API
+    let json_data = match fetch_from_r2(url).await {
+        Ok(data) => data,
+        Err(e) => {
+            eprintln!("Error fetching from {}: {}", url, e);
+            // Fallback to static file
+            match ASSETS_DIR.get_file(fallback_path) {
+                Some(file) => file.contents_utf8().unwrap_or("{}").to_string(),
+                None => "{}".to_string(),
+            }
+        }
     };
-
-    let body = file.contents_utf8().unwrap_or("").to_string();
+    
     (
-        [(header::CONTENT_TYPE, "application/json")],
-        body
+        [
+            (header::CONTENT_TYPE, "application/json"),
+            (header::CACHE_CONTROL, "no-cache, no-store, must-revalidate"),
+        ],
+        json_data
     ).into_response()
 }
 
-// Handler for ../templates/assets/events.json
-// same logic as events_handler()
-async fn progress_handler() -> Response {
-    let file = match ASSETS_DIR.get_file("assets/progress.json") {
-        Some(f) => f,
-        None => return (StatusCode::NOT_FOUND, "JSON file not found").into_response(),
-    };
+// Helper to fetch JSON from R2
+async fn fetch_from_r2(url: &str) -> std::result::Result<String, String> {
+    // Verify input of url here. 
+    if url != EVENTS_JSON_URL && url != PROGRESS_JSON_URL {
+        console_log!("SECURITY: Blocked attempt to fetch from non-whitelisted URL: {}", url);
+        return Err(format!("URL not whitelisted: {}", url));
+    }
 
-    let body = file.contents_utf8().unwrap_or("").to_string();
-    (
-        [(header::CONTENT_TYPE, "application/json")],
-        body
-    ).into_response()
+    // Helpful debugging runtime requests.
+    // console_log!("=== FETCH REQUEST DEBUG ===");
+    // console_log!("Target URL: {}", url);
+    // console_log!("URL matches EVENTS? {}", url == EVENTS_JSON_URL);
+    // console_log!("URL matches PROGRESS? {}", url == PROGRESS_JSON_URL);
+    // console_log!("========================");
+    
+    let mut request_init = RequestInit::new();
+    request_init.with_method(Method::Get);
+    
+    let request = Request::new_with_init(url, &request_init)
+        .map_err(|e| format!("Failed to create request: {:?}", e))?;
+    
+    let mut response = Fetch::Request(request)
+        .send()
+        .await
+        .map_err(|e| format!("Failed to fetch: {:?}", e))?;
+    
+    let status = response.status_code();
+    if status < 200 || status >= 300 {
+        return Err(format!("Request failed with status: {}", status));
+    }
+    
+    response
+        .text()
+        .await
+        .map_err(|e| format!("Failed to read response text: {:?}", e))
 }
-
 
 
 // Home Page
@@ -145,7 +181,6 @@ struct AboutTemplate {
     contacts: Vec<ContactInfo>,
 }
 async fn about_page() -> Html<String> {
-
     let contacts = build_contacts();
     let template = AboutTemplate { 
         show_noti: true,
@@ -166,4 +201,3 @@ async fn wowaudit_page() -> Html<String> {
     let rendered = template.render().unwrap();
     Html(rendered)
 }
-
