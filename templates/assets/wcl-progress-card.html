@@ -17,17 +17,9 @@
           </figure>
         </div>
         <div class="media-content">
-          <p class="title is-6" id="bossName">Dimensius, the All-Devouring</p>
-          <div class="level is-mobile">
-            <div class="level-left">
-              <div class="level-item">
-                <strong>Pulls:</strong> <span id="pullCount">368</span>
-              </div>
-              <div class="level-item">
-                <strong>Best:</strong> <span id="bestPercent">19.2% P3</span>
-              </div>
-            </div>
-          </div>
+          <p class="title is-6" id="bossName">Current Boss: </p>
+          <p class="title is-6" id="pullCount">Pulls: </p>
+          <p class="title is-6" id="bestPercent">Best: </p> 
         </div>
       </div>
     </div>
@@ -64,9 +56,9 @@ async function loadBossData() {
 
     // Populate widget
     document.getElementById('bossIcon').src = bossData.iconImageUrl;
-    document.getElementById('bossName').textContent = bossData.name;
-    document.getElementById('pullCount').textContent = bossData.pullCount;
-    document.getElementById('bestPercent').textContent = bossData.bestPercentForDisplay;
+    document.getElementById('bossName').textContent += bossData.name;
+    document.getElementById('pullCount').textContent += bossData.pullCount;
+    document.getElementById('bestPercent').textContent += bossData.bestPercentForDisplay;
 
   } catch (err) {
     console.error("Failed to load boss data:", err);
