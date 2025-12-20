@@ -1,6 +1,6 @@
 [package]
 name = "prod-seemsgood-web"
-version = "0.1.0"
+version = "1.0.2"
 edition = "2021"
 authors = [ "jg <j51b5@pm.me>" ]
 
