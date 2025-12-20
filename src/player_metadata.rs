@@ -106,19 +106,26 @@ pub struct RaidMetaData {
    pub datetime: &'static str,
    pub pretty_datetime: &'static str,
    pub fight_key: &'static str,
+   pub fight_is_video: bool, 
+
 }
 
+/// include a video:
+/// - set fight_is_video: true
+/// - ensure video in r2 follows pattern: $fight_name-kill-video.mp4
+/// TODO: ideally this takes a json file with a arbitrary amount of RaidMetaData structs.
 pub fn build_raid() -> Vec<RaidMetaData> {
     let raid_metadata = vec![
         RaidMetaData {
             fight_name: "Dimensius",
             season: "Season 3",
             expansion: "The War Within",
-            group_photo: "dimensius-kill-pic.png",
+            group_photo: "dimensius-kill",
             log_id: "Nmh3PAJ6kzYKGb2D",
             datetime: "2025-12-18",
             pretty_datetime: "10:45pm - 18 December 2025",
             fight_key: "Dimensius",
+            fight_is_video: true,
         },
         RaidMetaData {
             fight_name: "Gallywix",
@@ -129,16 +136,18 @@ pub fn build_raid() -> Vec<RaidMetaData> {
             datetime: "2025-06-26",
             pretty_datetime: "9:13pm - 26 June 2025",
             fight_key: "Gallywix",
+            fight_is_video: false,
         },
         RaidMetaData {
             fight_name: "Kyvesa",
             season: "Season 1",
             expansion: "The War Within",
-            group_photo: "kyvesa-kill-group.png",
+            group_photo: "kyvesa-kill", 
             log_id: "Lfx3nrBVRWtNFzMQ",
             datetime: "2024-12-12",
             pretty_datetime: "10:15pm - 12 December 2024",
             fight_key: "Kyvesa",
+            fight_is_video: true,
         },
         RaidMetaData {
             fight_name: "Fyrakk",
@@ -149,12 +158,11 @@ pub fn build_raid() -> Vec<RaidMetaData> {
             datetime: "2024-07-01",
             pretty_datetime: "10:03pm - 1 July 2024",
             fight_key: "Fyrakk",
+            fight_is_video: false,
         },
 
     ];
     raid_metadata
-
-
 }
 
 // Rosters are populated here. We could read a DB or config file of { $SEASON, { $Player, { $name, $class, $realm, $role }}}

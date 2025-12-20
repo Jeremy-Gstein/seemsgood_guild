@@ -4,18 +4,11 @@
     <figure class="image is-16by9 has-ratio">
       <!-- TODO: we should add a video field  -->
       <!-- with card.video_url, card.has_video, and card.group_photo for thumbnail -->
-      {% if card.fight_key == "Kyvesa" %}
+      {% if card.fight_is_video %}
       <video class="has-rounded-border" controls muted 
              preload="metadata" playsinline 
-             poster="https://r2.seemsgood.org/content/media/kyveza-group-pic.png">
-        <source src="https://r2.seemsgood.org/content/media/kyvesa-kill-video.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-      </video>
-      {% else if card.fight_key == "Dimensius" %}
-      <video class="has-rounded-border" controls muted 
-             preload="metadata" playsinline 
-             poster="https://r2.seemsgood.org/content/media/dimensius-kill-pic.png">
-        <source src="https://r2.seemsgood.org/content/media/dimi-kill-ce.mp4" type="video/mp4">
+             poster="https://r2.seemsgood.org/content/media/{{ card.group_photo }}.png">
+        <source src="https://r2.seemsgood.org/content/media/{{ card.group_photo }}-video.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
       </video>
       {% else %} 
