@@ -146,6 +146,7 @@ struct IndexTemplate {
 }
 async fn home_page() -> Html<String> {
     let mut rosters = HashMap::new();
+    rosters.insert("Dimensius".to_string(), build_roster("Dimensius"));
     rosters.insert("Gallywix".to_string(), build_roster("Gallywix"));
     rosters.insert("Kyvesa".to_string(), build_roster("Kyvesa"));
     rosters.insert("Fyrakk".to_string(), build_roster("Fyrakk"));

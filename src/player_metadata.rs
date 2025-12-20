@@ -111,6 +111,16 @@ pub struct RaidMetaData {
 pub fn build_raid() -> Vec<RaidMetaData> {
     let raid_metadata = vec![
         RaidMetaData {
+            fight_name: "Dimensius",
+            season: "Season 3",
+            expansion: "The War Within",
+            group_photo: "dimensius-kill-pic.png",
+            log_id: "Nmh3PAJ6kzYKGb2D",
+            datetime: "2025-12-18",
+            pretty_datetime: "10:45pm - 18 December 2025",
+            fight_key: "Dimensius",
+        },
+        RaidMetaData {
             fight_name: "Gallywix",
             season: "Season 2",
             expansion: "The War Within",
@@ -238,9 +248,38 @@ pub fn build_roster(id: &str) -> Vec<Player> {
         Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage", role: PlayerRole::Dps },
         Player { name: "Aphitari", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::Dps },
     ];
+
+    // ----[ Season 3 TWW Card ]----
+    let dimensius = vec![
+        // Tanks
+        Player { name: "Whare", class: PlayerClass::Paladin, realm: "Stormrage", role: PlayerRole::Tank },
+        Player { name: "Purpformance", class: PlayerClass::Monk, realm: "Proudmoore", role: PlayerRole::Tank },
+        // Healers
+        Player { name: "Piptide", class: PlayerClass::Shaman, realm: "Tichondrius", role: PlayerRole::Healer },
+        Player { name: "Evelianne", class: PlayerClass::Monk, realm: "Stormrage", role: PlayerRole::Healer },
+        Player { name: "Philfishh", class: PlayerClass::Monk, realm: "Area-52", role: PlayerRole::Healer },
+        Player { name: "Delusionol", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Healer },
+        // DPS
+        Player { name: "Obiscuit", class: PlayerClass::DeathKnight, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Fliptwisty", class: PlayerClass::DemonHunter, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Ovtlaw", class: PlayerClass::Rogue, realm: "Dalaran", role: PlayerRole::Dps },
+        Player { name: "Nuzzler", class: PlayerClass::Druid, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Rogerport", class: PlayerClass::Mage, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Indico", class: PlayerClass::Evoker, realm: "Zul'jin", role: PlayerRole::Dps },
+        Player { name: "Prankdaddy", class: PlayerClass::Evoker, realm: "Thrall", role: PlayerRole::Dps },
+        Player { name: "Kolzane", class: PlayerClass::Hunter, realm: "Ysera", role: PlayerRole::Dps },
+        Player { name: "Stormßreeð", class: PlayerClass::Hunter, realm: "Thrall", role: PlayerRole::Dps },
+        Player { name: "Infilicious", class: PlayerClass::Mage, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Ppddk", class: PlayerClass::DeathKnight, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Purpleheal", class: PlayerClass::Priest, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Nyanslok", class: PlayerClass::Warlock, realm: "Stormrage", role: PlayerRole::Dps },
+        Player { name: "Aphitari", class: PlayerClass::Warrior, realm: "Stormrage", role: PlayerRole::Dps },
+    ];
+
     
      
     let id_str = match id {
+        "Dimensius" => dimensius,
         "Gallywix" => gallywix,
         "Kyvesa" => kyvesa,
         "Fyrakk" => fyrakk,

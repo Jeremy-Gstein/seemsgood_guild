@@ -11,9 +11,16 @@
         <source src="https://r2.seemsgood.org/content/media/kyvesa-kill-video.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
       </video>
-      {% else %}
+      {% else if card.fight_key == "Dimensius" %}
+      <video class="has-rounded-border" controls muted 
+             preload="metadata" playsinline 
+             poster="https://r2.seemsgood.org/content/media/dimensius-kill-pic.png">
+        <source src="https://r2.seemsgood.org/content/media/dimi-kill-ce.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+      {% else %} 
       <img src="https://r2.seemsgood.org/content/media/{{ card.group_photo }}" 
-     alt="Mythic {{ card.fight_name }} Kill - Group Photo">
+           alt="Mythic {{ card.fight_name }} Kill - Group Photo">
       {% endif %}
     </figure>
   </div>
