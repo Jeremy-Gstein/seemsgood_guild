@@ -30,6 +30,7 @@ fn router() -> Router {
         .route("/dps-sims", get(dps_sims::damagesimspage))
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
+        .route("/talents", get(talents_page))
         .route("/css/bulma.min.css", get(bulma_css_handler))
         .fallback(Redirect::permanent("/"))
 }
@@ -46,7 +47,6 @@ async fn fetch(
     let path = req.uri().path();
    
     if path == "/progress" {
-        console_log!("/progress route echo");
         return Ok(fetch_json_endpoint(PROGRESS_JSON_URL, "assets/progress.json").await);
     }
     if path == "/events" {
@@ -199,6 +199,18 @@ struct WowauditTemplate {
 }
 async fn wowaudit_page() -> Html<String> {
     let template = WowauditTemplate { show_noti: true };
+    let rendered = template.render().unwrap();
+    Html(rendered)
+}
+
+// Talents Page (talents.seemsgood.org)
+#[derive(Template)]
+#[template(path = "talents.html")]
+struct TalentsTemplate {
+    show_noti: bool,
+}
+async fn talents_page() -> Html<String> {
+    let template = TalentsTemplate { show_noti: true };
     let rendered = template.render().unwrap();
     Html(rendered)
 }
