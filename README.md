@@ -23,18 +23,39 @@
 
 ## Contributing:
 - Step 1. Create a route in ./src/lib.rs under router following the others scheme.
+```rust
+    Router::new() // created under this method
+        // ...
+        .route("/your_page_name", get(your_page))
+        // ...
+```
 - Step 2. Create a Template struct and page function in ./src/lib.rs
+```rust
+#[derive(Template)]
+#[template(path = "your_page.html")]
+struct YourPageTemplate {
+    show_noti: bool,
+    // any other parameters needed (not including noti will fail during build)
+}
+async fn your_page() -> Html<String> {
+    let t = YourPageTemplate {
+        show_noti: true,
+    };
+    let r = t.render().unwrap();
+    Html(r)
+}
+```
 - Step 3. For backend logic that is not html or js related. use a seperate file in ./src and load as a module
 - Step 4. Create a html file under ./templates/ and extend the ui with askama (keeps navbar and footer and loads css)
 ```html
 {% extends layhout.html %} 
-<-- Navbar shown here. css and js from layout.html loaded here -->
+    <!-- Navbar shown here. css and js from layout.html loaded here -->
 {% block content %}
-<-- your layout/ui content here -->
+    <!-- your layout/ui content here -->
 {% include "assets/$your-content.html" %}
-<-- your html, js, css here (in a seperate file located in ./assets) -->
+    <!-- your html, js, css here (in a seperate file located in ./assets) -->
 {% endblock %}
-<-- Footer from layout.html shown here -->
+    <!-- Footer from layout.html shown here -->
 ```
 Feel free to get in contact and ask for any help!
 
