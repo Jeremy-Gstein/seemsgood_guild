@@ -50,7 +50,7 @@ async fn fetch(
         return Ok(fetch_json_endpoint(PROGRESS_JSON_URL, "assets/progress.json").await);
     }
     if path == "/events" {
-        return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/progress.json").await);
+        return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/events.json").await);
     }
     // For all other routes, use the router
     Ok(router().call(req).await?)
