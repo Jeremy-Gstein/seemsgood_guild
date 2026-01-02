@@ -1,0 +1,242 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<section class="section">
+  <div class="container" id="expectations-box">
+    <!-- Spinner while loading -->
+    <div class="has-text-centered" id="loading-spinner">
+      <span class="icon is-large">
+        <i class="nf nf-dev-spinner nf-pulse nf-3x"></i>
+      </span>
+      <p>Loading Raider Expectations...</p>
+    </div>
+
+    <!-- Content will be injected here -->
+    <div id="expectations-content" class="fade-in"></div>
+  </div>
+</section>
+
+<!-- Useful links to wowaudit pages -->
+<div class="container is-flex is-justify-content-center is-align-items-center is-flex-wrap-wrap"
+     style="gap:10px; margin-top:20px; margin-bottom:70px;">
+
+  <a class="button is-link is-outlined is-clickable"
+     href="https://wowaudit.com/sheet/us/stormrage/seems-good/main">
+    <span class="icon">
+      <i class="nf nf-md-microsoft_excel"></i>
+    </span>
+    <span>View Spreadsheet</span>
+  </a>
+
+  <a class="button is-link is-outlined is-clickable"
+     href="https://www.wowaudit.com/us/stormrage/seems-good/main/neighborhood?map_id=1&layer_index=0">
+    <span class="icon">
+      <i class="nf nf-fa-house_chimney"></i>
+    </span>
+    <span>Neighborhood Planner</span>
+  </a>
+
+  <a class="button is-link is-outlined is-clickable"
+     href="https://www.wowaudit.com/us/stormrage/seems-good/main/wishlists/loot_history">
+    <span class="icon">
+      <i class="nf nf-fa-history"></i>
+    </span>
+    <span>Loot History</span>
+  </a>
+</div>
+
+<style>
+/* Fade-in effect */
+#expectations-content.fade-in {
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+#expectations-content.fade-in.visible {
+  opacity: 1;
+}
+
+/* Spinner center */
+#loading-spinner {
+  margin: 2rem 0;
+}
+
+/* Table of Contents base style (light mode) */
+#custom-toc {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 280px;
+  max-height: 80vh;
+  overflow: hidden;
+  padding: 1rem;
+  z-index: 9999;
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #dbdbdb;
+  background-color: #fff;
+  color: #363636;
+  box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1);
+  transition: max-height 1.25s ease, padding 1.25s ease;
+}
+
+/* Dark theme overrides */
+html.theme-dark #custom-toc {
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border: 1px solid #555;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+/* TOC content */
+#custom-toc strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+#custom-toc hr {
+  border: none;
+  border-top: 1px solid #dbdbdb;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+html.theme-dark #custom-toc hr {
+  border-top: 1px solid #555;
+}
+
+#custom-toc a {
+  display: block;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  color: #3273dc;
+  text-decoration: none;
+}
+
+html.theme-dark #custom-toc a {
+  color: #7aa6da;
+}
+
+#custom-toc a:hover {
+  text-decoration: underline;
+}
+
+/* Collapse toggle button */
+#custom-toc .toc-toggle {
+  display: block;
+  text-align: right;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+/* Collapsed state */
+#custom-toc.collapsed {
+  max-height: 1rem; /* enough to show toggle fully */
+  padding-bottom: 2rem;
+}
+
+#custom-toc.collapsed a,
+#custom-toc.collapsed hr,
+#custom-toc.collapsed strong {
+  display: none;
+}
+
+#custom-toc.collapsed .toc-toggle {
+  display: block;
+}
+</style>
+
+<script>
+/* Build Table of Contents with collapsible feature */
+function buildTOC() {
+  const container = document.getElementById('expectations-content');
+  const headings = Array.from(container.querySelectorAll("p.title"));
+
+  if (headings.length === 0) {
+    console.warn("No headings found with class 'title' inside loaded content");
+    return;
+  }
+
+  const oldToc = document.getElementById("custom-toc");
+  if (oldToc) oldToc.remove();
+
+  const tocContainer = document.createElement("div");
+  tocContainer.id = "custom-toc";
+
+  // Collapse toggle button
+  const toggle = document.createElement("span");
+  toggle.className = "toc-toggle";
+
+  // Add TOC title and line
+  const title = document.createElement("strong");
+  title.textContent = "Table of Contents";
+  tocContainer.appendChild(toggle);
+  tocContainer.appendChild(title);
+  tocContainer.appendChild(document.createElement("hr"));
+
+  // Add links
+  headings.forEach((heading, i) => {
+    if (!heading.id) heading.id = `toc_heading_${i}`;
+    const link = document.createElement("a");
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent.trim();
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      document.getElementById(heading.id).scrollIntoView({ behavior: "smooth" });
+    });
+    tocContainer.appendChild(link);
+  });
+
+  // Restore collapse state from localStorage
+  let collapsed = localStorage.getItem("tocCollapsed") === "true";
+  if (collapsed) tocContainer.classList.add("collapsed");
+  toggle.textContent = collapsed ? "Expand ▲" : "Collapse ▼";
+
+  // Toggle collapse/expand
+  toggle.addEventListener("click", () => {
+    tocContainer.classList.toggle("collapsed");
+    const isCollapsed = tocContainer.classList.contains("collapsed");
+    toggle.textContent = isCollapsed ? "Expand ▲" : "Collapse ▼";
+    localStorage.setItem("tocCollapsed", isCollapsed);
+  });
+
+  document.body.appendChild(tocContainer);
+}
+
+/* Load expectations content */
+async function loadExpectations() {
+  const spinner = document.getElementById('loading-spinner');
+  const contentDiv = document.getElementById('expectations-content');
+
+  try {
+    const res = await fetch('/expectations');
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    let html = await res.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    doc.querySelectorAll('style').forEach(s => s.remove());
+    doc.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+
+    contentDiv.innerHTML = doc.body.innerHTML;
+    spinner.style.display = 'none';
+    requestAnimationFrame(() => contentDiv.classList.add('visible'));
+
+    buildTOC();
+
+  } catch (err) {
+    console.error('Failed to load expectations:', err);
+    spinner.style.display = 'none';
+    contentDiv.innerHTML = '<p>Content unavailable.</p>';
+    contentDiv.classList.add('visible');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadExpectations);
+</script>
+
+{% endblock %}
+
