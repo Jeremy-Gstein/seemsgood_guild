@@ -7,6 +7,8 @@ use axum::response::Html;
 use include_dir::{include_dir, Dir};
 use askama_axum::Template;
 use std::collections::HashMap;
+use comrak::{markdown_to_html, ComrakOptions};
+use html2text::from_read;
 
 // Template logic 
 mod dps_sims; 
@@ -20,8 +22,9 @@ static ASSETS_DIR: Dir = include_dir!("templates");
 // R2 Endpoints for dynamic content
 const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
 const PROGRESS_JSON_URL: &str = "https://r2.seemsgood.org/content/progress.json";
-const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=12LaB7RW0bicUY7Emqz5s6Q-jJlPvGWLjrD8uTCeGTLQ";
-
+//const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=12LaB7RW0bicUY7Emqz5s6Q-jJlPvGWLjrD8uTCeGTLQ";
+//const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=1R3oxxJnprNJKQjM45vGBF5I-L56q5yWx3Xd6VMFy-wg";
+const RAIDER_EXPECTATIONS_URL: &str = "https://r2.seemsgood.org/content/raider-expectations.md";
 
 // All routes for webpage that are not dynamic.
 fn router() -> Router {
@@ -55,7 +58,7 @@ async fn fetch(
     if path == "/events" {
         return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/events.json").await);
     }
-    // Handle /expectations
+    // Handle /expectations (gh url)
     if path == "/expectations" {
         return Ok(fetch_html_endpoint(RAIDER_EXPECTATIONS_URL, "assets/404.html").await);
     }
@@ -63,6 +66,28 @@ async fn fetch(
     // For all other routes, use the router
     Ok(router().call(req).await?)
 }
+
+// Markdown Extension Options (striketrough table etc..)
+/// use in functions that call ComrakOptions::default()
+/// keeps extensions same, less repeated code.
+/// example:
+/// ```rust
+/// let mut options = ComrakOptions::default(); 
+/// enable_extensions(&mut options);
+/// ```
+fn enable_extensions(options: &mut ComrakOptions) {
+    options.extension.strikethrough = true;
+    options.extension.table = true;
+    options.extension.autolink = true;
+    options.extension.shortcodes = true;
+    options.extension.underline = true;
+    options.extension.description_lists = true;
+    options.extension.greentext = true;
+    options.extension.superscript = true;
+    options.extension.subscript = true;
+    options.extension.spoiler = true;
+}
+
 
 async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Response<axum::body::Body> {
 
@@ -76,13 +101,16 @@ async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Resp
             }
         }
     };
+    let mut options = ComrakOptions::default(); 
+    enable_extensions(&mut options);
+    let markdown = markdown_to_html(&html_data, &options);
 
     (
         [
         (header::CONTENT_TYPE, "text/html; charset=utf-8"),
         (header::CACHE_CONTROL, "no-cache, no-store, must-revalidate"),
         ],
-        html_data,
+        markdown,
     )
         .into_response()
 }
