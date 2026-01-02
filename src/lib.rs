@@ -20,6 +20,8 @@ static ASSETS_DIR: Dir = include_dir!("templates");
 // R2 Endpoints for dynamic content
 const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
 const PROGRESS_JSON_URL: &str = "https://r2.seemsgood.org/content/progress.json";
+const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=12LaB7RW0bicUY7Emqz5s6Q-jJlPvGWLjrD8uTCeGTLQ";
+
 
 // All routes for webpage that are not dynamic.
 fn router() -> Router {
@@ -31,6 +33,7 @@ fn router() -> Router {
         .route("/keys",  get(mythic_plus::mythicplus_page))
         .route("/wowaudit", get(wowaudit_page))
         .route("/talents", get(talents_page))
+        .route("/resources", get(resources_page))
         .route("/css/bulma.min.css", get(bulma_css_handler))
         .fallback(Redirect::permanent("/"))
 }
@@ -52,9 +55,69 @@ async fn fetch(
     if path == "/events" {
         return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/events.json").await);
     }
+    // Handle /expectations
+    if path == "/expectations" {
+        return Ok(fetch_html_endpoint(RAIDER_EXPECTATIONS_URL, "assets/404.html").await);
+    }
+
     // For all other routes, use the router
     Ok(router().call(req).await?)
 }
+
+async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Response<axum::body::Body> {
+
+    let html_data = match fetch_html_from_whitelist(url).await {
+        Ok(data) => data,
+        Err(e) => {
+            eprintln!("Error fetching HTML from {}: {}", url, e);
+            match ASSETS_DIR.get_file(fallback_path) {
+                Some(file) => file.contents_utf8().unwrap_or("").to_string(),
+                None => "<p>Content unavailable.</p>".to_string(),
+            }
+        }
+    };
+
+    (
+        [
+        (header::CONTENT_TYPE, "text/html; charset=utf-8"),
+        (header::CACHE_CONTROL, "no-cache, no-store, must-revalidate"),
+        ],
+        html_data,
+    )
+        .into_response()
+}
+
+async fn fetch_html_from_whitelist(url: &str) -> Result<String, String> {
+    if url != RAIDER_EXPECTATIONS_URL {
+        console_log!(
+            "SECURITY: Blocked attempt to fetch non-whitelisted HTML URL: {}",
+            url
+        );
+        return Err("URL not whitelisted".into());
+    }
+
+    let mut request_init = RequestInit::new();
+    request_init.with_method(Method::Get);
+
+    let request = Request::new_with_init(url, &request_init)
+        .map_err(|e| format!("Failed to create request: {:?}", e))?;
+
+    let mut response = Fetch::Request(request)
+        .send()
+        .await
+        .map_err(|e| format!("Failed to fetch HTML: {:?}", e))?;
+
+    let status = response.status_code();
+    if status < 200 || status >= 300 {
+        return Err(format!("HTML request failed with status: {}", status));
+    }
+
+    response
+        .text()
+        .await
+        .map_err(|e| format!("Failed to read HTML response: {:?}", e))
+}
+
 
 // Handler for ../templates/css/bulma.min.css 
 async fn bulma_css_handler() -> axum::http::Response<axum::body::Body> {
@@ -192,6 +255,7 @@ async fn about_page() -> Html<String> {
 }
 
 // Spreadsheet Page (wowaudit)
+// TODO link to /resources
 #[derive(Template)]
 #[template(path = "wowaudit.html")]
 struct WowauditTemplate {
@@ -214,3 +278,16 @@ async fn talents_page() -> Html<String> {
     let rendered = template.render().unwrap();
     Html(rendered)
 }
+
+// Resources Page (Raider expectations, loot management, trial process, and raid schedule.)
+#[derive(Template)]
+#[template(path = "resources.html")]
+struct ResourcesTemplate{
+    show_noti: bool,
+}
+async fn resources_page() -> Html<String> {
+    let template = ResourcesTemplate { show_noti: true };
+    let rendered = template.render().unwrap();
+    Html(rendered)
+}
+
