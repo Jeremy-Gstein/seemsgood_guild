@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-
+<!-- link to github markdown css (fix headers and indents) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css" />
 
 <style>
@@ -201,7 +201,7 @@
 /* Build Table of Contents */
 function buildTOC() {
   const container = document.getElementById('expectations-content');
-  const headings = Array.from(container.querySelectorAll("h1, h2, h3"));
+  const headings = Array.from(container.querySelectorAll("h1")); // "h1, h2, .. to append sub sections"
   if (!headings.length) return;
 
   const oldToc = document.getElementById("custom-toc");

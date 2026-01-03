@@ -9,20 +9,24 @@ use askama_axum::Template;
 use std::collections::HashMap;
 use comrak::{markdown_to_html, ComrakOptions};
 
-// Template logic 
+// +----------------+
+// | Template logic |
+// +----------------+
 mod dps_sims; 
 mod mythic_plus;
 mod player_metadata;
 mod about_data;
 
+// +---------------+
+// | Static Assets |
+// +---------------+
+
 // Include html, css, and and media in local repo.
 static ASSETS_DIR: Dir = include_dir!("templates");
-
 // R2 Endpoints for dynamic content
+// TODO: make generic handler for /content/
 const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
 const PROGRESS_JSON_URL: &str = "https://r2.seemsgood.org/content/progress.json";
-//const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=12LaB7RW0bicUY7Emqz5s6Q-jJlPvGWLjrD8uTCeGTLQ";
-//const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=1R3oxxJnprNJKQjM45vGBF5I-L56q5yWx3Xd6VMFy-wg";
 const RAIDER_EXPECTATIONS_URL: &str = "https://r2.seemsgood.org/content/raider-expectations.md";
 
 // All routes for webpage that are not dynamic.
@@ -39,6 +43,10 @@ fn router() -> Router {
         .route("/css/bulma.min.css", get(bulma_css_handler))
         .fallback(Redirect::permanent("/"))
 }
+
+// +-------------------+
+// | Worker Entrypoint |
+// +-------------------+
 
 #[event(fetch)]
 async fn fetch(
@@ -66,7 +74,10 @@ async fn fetch(
     Ok(router().call(req).await?)
 }
 
-// Markdown Extension Options (striketrough table etc..)
+// +----------------------------+
+// | Markdown Extension Options | (striketrough table etc..)
+// +----------------------------+
+
 /// use in functions that call ComrakOptions::default()
 /// keeps extensions same, less repeated code.
 /// example:
@@ -87,7 +98,13 @@ fn enable_extensions(options: &mut ComrakOptions) {
     options.extension.spoiler = true;
 }
 
+// +------------------------------+
+// | Handlers for Dynamic Content |
+// +------------------------------+
 
+// Fetch HTML from $url. Fallback on local file. 
+// Request  | /expectations -> fetch_html_endpoint -> |MARKDOWN.md| 
+// Response | /expectations <- markdown_to_html    <- |MARKDOWN.md|
 async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Response<axum::body::Body> {
 
     let html_data = match fetch_html_from_whitelist(url).await {
@@ -117,6 +134,7 @@ async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Resp
         .into_response()
 }
 
+// Protect against arbitrary HTML only allow scoped URLs
 async fn fetch_html_from_whitelist(url: &str) -> Result<String, String> {
     if url != RAIDER_EXPECTATIONS_URL {
         console_log!(
@@ -197,13 +215,6 @@ async fn fetch_from_r2(url: &str) -> std::result::Result<String, String> {
         console_log!("SECURITY: Blocked attempt to fetch from non-whitelisted URL: {}", url);
         return Err(format!("URL not whitelisted: {}", url));
     }
-
-    // Helpful debugging runtime requests.
-    // console_log!("=== FETCH REQUEST DEBUG ===");
-    // console_log!("Target URL: {}", url);
-    // console_log!("URL matches EVENTS? {}", url == EVENTS_JSON_URL);
-    // console_log!("URL matches PROGRESS? {}", url == PROGRESS_JSON_URL);
-    // console_log!("========================");
     
     let mut request_init = RequestInit::new();
     request_init.with_method(Method::Get);
@@ -227,6 +238,9 @@ async fn fetch_from_r2(url: &str) -> std::result::Result<String, String> {
         .map_err(|e| format!("Failed to read response text: {:?}", e))
 }
 
+// +---------------------------+
+// | Build Pages from Templates|
+// +---------------------------+
 
 // Home Page
 use player_metadata::{build_roster, Player, build_raid, RaidMetaData};
