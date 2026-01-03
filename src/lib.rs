@@ -7,21 +7,27 @@ use axum::response::Html;
 use include_dir::{include_dir, Dir};
 use askama_axum::Template;
 use std::collections::HashMap;
+use comrak::{markdown_to_html, ComrakOptions};
 
-// Template logic 
+// +----------------+
+// | Template logic |
+// +----------------+
 mod dps_sims; 
 mod mythic_plus;
 mod player_metadata;
 mod about_data;
 
+// +---------------+
+// | Static Assets |
+// +---------------+
+
 // Include html, css, and and media in local repo.
 static ASSETS_DIR: Dir = include_dir!("templates");
-
 // R2 Endpoints for dynamic content
+// TODO: make generic handler for /content/
 const EVENTS_JSON_URL: &str = "https://r2.seemsgood.org/content/events.json";
 const PROGRESS_JSON_URL: &str = "https://r2.seemsgood.org/content/progress.json";
-const RAIDER_EXPECTATIONS_URL: &str = "https://docs.google.com/document/export?format=html&id=12LaB7RW0bicUY7Emqz5s6Q-jJlPvGWLjrD8uTCeGTLQ";
-
+const RAIDER_EXPECTATIONS_URL: &str = "https://r2.seemsgood.org/content/raider-expectations.md";
 
 // All routes for webpage that are not dynamic.
 fn router() -> Router {
@@ -37,6 +43,10 @@ fn router() -> Router {
         .route("/css/bulma.min.css", get(bulma_css_handler))
         .fallback(Redirect::permanent("/"))
 }
+
+// +-------------------+
+// | Worker Entrypoint |
+// +-------------------+
 
 #[event(fetch)]
 async fn fetch(
@@ -55,7 +65,7 @@ async fn fetch(
     if path == "/events" {
         return Ok(fetch_json_endpoint(EVENTS_JSON_URL, "assets/events.json").await);
     }
-    // Handle /expectations
+    // Handle /expectations (gh url)
     if path == "/expectations" {
         return Ok(fetch_html_endpoint(RAIDER_EXPECTATIONS_URL, "assets/404.html").await);
     }
@@ -64,6 +74,37 @@ async fn fetch(
     Ok(router().call(req).await?)
 }
 
+// +----------------------------+
+// | Markdown Extension Options | (striketrough table etc..)
+// +----------------------------+
+
+/// use in functions that call ComrakOptions::default()
+/// keeps extensions same, less repeated code.
+/// example:
+/// ```rust
+/// let mut options = ComrakOptions::default(); 
+/// enable_extensions(&mut options);
+/// ```
+fn enable_extensions(options: &mut ComrakOptions) {
+    options.extension.strikethrough = true;
+    options.extension.table = true;
+    options.extension.autolink = true;
+    options.extension.shortcodes = true;
+    options.extension.underline = true;
+    options.extension.description_lists = true;
+    options.extension.greentext = true;
+    options.extension.superscript = true;
+    options.extension.subscript = true;
+    options.extension.spoiler = true;
+}
+
+// +------------------------------+
+// | Handlers for Dynamic Content |
+// +------------------------------+
+
+// Fetch HTML from $url. Fallback on local file. 
+// Request  | /expectations -> fetch_html_endpoint -> |MARKDOWN.md| 
+// Response | /expectations <- markdown_to_html    <- |MARKDOWN.md|
 async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Response<axum::body::Body> {
 
     let html_data = match fetch_html_from_whitelist(url).await {
@@ -76,17 +117,24 @@ async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Resp
             }
         }
     };
+    let mut options = ComrakOptions::default(); 
+    enable_extensions(&mut options);
+    let markdown = format!(
+        r#"<div class="markdown-body">{}</div>"#,
+        markdown_to_html(&html_data, &options)
+    );
 
     (
         [
         (header::CONTENT_TYPE, "text/html; charset=utf-8"),
         (header::CACHE_CONTROL, "no-cache, no-store, must-revalidate"),
         ],
-        html_data,
+        markdown,
     )
         .into_response()
 }
 
+// Protect against arbitrary HTML only allow scoped URLs
 async fn fetch_html_from_whitelist(url: &str) -> Result<String, String> {
     if url != RAIDER_EXPECTATIONS_URL {
         console_log!(
@@ -167,13 +215,6 @@ async fn fetch_from_r2(url: &str) -> std::result::Result<String, String> {
         console_log!("SECURITY: Blocked attempt to fetch from non-whitelisted URL: {}", url);
         return Err(format!("URL not whitelisted: {}", url));
     }
-
-    // Helpful debugging runtime requests.
-    // console_log!("=== FETCH REQUEST DEBUG ===");
-    // console_log!("Target URL: {}", url);
-    // console_log!("URL matches EVENTS? {}", url == EVENTS_JSON_URL);
-    // console_log!("URL matches PROGRESS? {}", url == PROGRESS_JSON_URL);
-    // console_log!("========================");
     
     let mut request_init = RequestInit::new();
     request_init.with_method(Method::Get);
@@ -197,6 +238,9 @@ async fn fetch_from_r2(url: &str) -> std::result::Result<String, String> {
         .map_err(|e| format!("Failed to read response text: {:?}", e))
 }
 
+// +---------------------------+
+// | Build Pages from Templates|
+// +---------------------------+
 
 // Home Page
 use player_metadata::{build_roster, Player, build_raid, RaidMetaData};
