@@ -8,7 +8,6 @@ use include_dir::{include_dir, Dir};
 use askama_axum::Template;
 use std::collections::HashMap;
 use comrak::{markdown_to_html, ComrakOptions};
-use html2text::from_read;
 
 // Template logic 
 mod dps_sims; 
@@ -103,7 +102,10 @@ async fn fetch_html_endpoint(url: &str, fallback_path: &str) -> axum::http::Resp
     };
     let mut options = ComrakOptions::default(); 
     enable_extensions(&mut options);
-    let markdown = markdown_to_html(&html_data, &options);
+    let markdown = format!(
+        r#"<div class="markdown-body">{}</div>"#,
+        markdown_to_html(&html_data, &options)
+    );
 
     (
         [
