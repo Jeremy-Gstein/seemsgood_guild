@@ -51,6 +51,17 @@
   html.theme-light .markdown-body a {
     color: #0366d6;
   }
+  /* Fix dotted lists in light mode */
+  html.theme-light .markdown-body ul {
+    list-style-type: disc !important; /* Use disc for bullets */
+    padding-left: 1.5em !important;
+  }
+
+  html.theme-light .markdown-body ul ul {
+    list-style-type: circle !important; /* nested lists */
+  }
+
+
 </style>
 
 
