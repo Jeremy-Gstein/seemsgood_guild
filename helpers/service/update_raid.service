@@ -3,7 +3,7 @@ Description=Update Raid Data & Player Sync
 
 [Service]
 Type=oneshot
-User=ADD-USER-HERE
-WorkingDirectory=%h/seemsgood_guild/helpers
-EnvironmentFile=%h/seemsgood_guild/helpers/.env
-ExecStart=%h/seemsgood_guild/helpers/helpers_main.sh
+User=$USER
+WorkingDirectory=/home/$USER/seemsgood_guild/helpers
+EnvironmentFile=/home/$USER/seemsgood_guild/helpers/.env
+ExecStart=/home/$USER/seemsgood_guild/helpers/helpers_main.sh

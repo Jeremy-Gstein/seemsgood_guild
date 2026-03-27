@@ -24,6 +24,7 @@ OnCalendar=Tue,Thu *-*-* 23:00:00
 OnCalendar=Tue,Thu *-*-* 23:10:00
 OnCalendar=Tue,Thu *-*-* 23:20:00
 OnCalendar=Tue,Thu *-*-* 23:30:00
+Unit=update_raid.service
 Persistent=true
 
 [Install]
