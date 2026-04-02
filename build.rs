@@ -15,12 +15,17 @@ fn main() {
 
     // Get the git branch name
     let branch_output = Command::new("git")
-        .args(&["symbolic-ref", "--short", "HEAD"])
+        .args(&["rev-parse", "--abbrev-ref", "HEAD"])
         .output();
 
     let git_branch = match branch_output {
         Ok(output) if output.status.success() => {
-            String::from_utf8_lossy(&output.stdout).trim().to_string()
+            let branch = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            if branch == "HEAD" {
+                "main".to_string()
+            } else {
+                branch
+            }
         }
         _ => "unknown".to_string(),
     };
