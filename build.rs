@@ -15,7 +15,7 @@ fn main() {
 
     // Get the git branch name
     let branch_output = Command::new("git")
-        .args(&["rev-parse", "--abbrev-ref", "HEAD"])
+        .args(&["symbolic-ref", "--short", "HEAD"])
         .output();
 
     let git_branch = match branch_output {
